@@ -1,0 +1,12 @@
+.paymentText {
+  margin-left: 10px;
+}
+
+a.nounderline {
+  text-decoration: none;
+}
+
+.paymentExpireText {
+  margin-right: 15px;
+}
+
