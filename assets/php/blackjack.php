@@ -10,10 +10,16 @@ $cards = ["player"=>[], "bank"=>[]];
 switch ($controller) {
     case "start":
       	StartController();
-				break;
-		case "player-draw-card":
-				PlayerDrawCardController();
-				break;
+		break;
+	case "player-hit":
+		PlayerHitController();
+		break;
+	case "bank-hit":
+		BankHitController();
+		break;
+	case "end":
+		EndController();
+		break;
 }
 
 // controller
@@ -26,16 +32,65 @@ function StartController(){
     echo json_encode($cards);
 }
 
-function PlayerDrawCardController(){
+function PlayerHitController(){
 	$card = DrawCard();
 	$cards["player"][] = $card;
 
 	echo json_encode($card);
 }
 
+function BankHitController(){
+	$card = DrawCard();
+	$cards["bank"][] = $card;
+
+	echo json_encode($card);
+}
+
+function EndController(){
+
+	if (PlayerValue() > 21){
+		Loss();
+		return;
+	}
+	if (PlayerValue() == 21){
+		Blackjack();
+		return;
+	}
+	if (BankValue() > 21){
+		Win();
+		return;
+	}
+	if (PlayerValue() > BankValue()){
+		Win();
+		return;
+	}
+	else{
+		Loss();
+		return;
+	}
+}
+
 // functions
 function DrawCard(){
-    return ["color"=>"Hearts", "number"=>"8", "value"=>8];
+    return ["color"=>"Diamonds", "number"=>"7", "value"=>7];
+}
+
+function BankValue(){
+	$bank = $cards["bank"];
+	$value = 0;
+	for ($i=0; $i < count($bank); $i++) { 
+		$value += $bank[$i]["value"];
+	}
+	return $value;
+}
+
+function PlayerValue(){
+	$player = $cards["player"];
+	$value = 0;
+	for ($i=0; $i < count($player); $i++) { 
+		$value += $player[$i]["value"];
+	}
+	return $value;
 }
 
 ?>

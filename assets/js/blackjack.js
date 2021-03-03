@@ -1,21 +1,25 @@
 const url = "assets/php/blackjack.php"
 const datatype = ""
-var request;
-var cards;
+var request, cards, cache
 
 
-$("#draw-card").click(function(){
+$("#hit").click(function(){
 	if(cards == null){
 		StartGame()
 	}
 	else{
-		DrawCard()
+		Hit()
 	}
 })
 
+$("#stand").click(function(){
+	Bank()
+})
+
 function StartGame(){
-	if ($("#bet").val() == null){
-		alert("Bitte geben Sie einen Einsatz ein")
+	if ($("#bet").val() == "" || $("#bet").val() == 0){
+		alert("Please enter your bet")
+		return
 	}
 	$("#bet").prop("disabled", true)
 
@@ -30,9 +34,10 @@ function StartGame(){
 
 	request.done(function (data, status){
 		if (status == "success"){
-			var data = JSON.parse(data);
-			
-			cards = data
+			cards = JSON.parse(data)
+
+			cache = cards.bank.pop()
+
 			for(i = 0; i < cards.player.length; i++){
 				ShowCard(cards.player[i], "#player-cards")
 			}
@@ -42,16 +47,17 @@ function StartGame(){
 			DisplayValues()
 		}
 	})
-	$("#draw-card").text("Weitere Karte ziehen")
+	$("#hit").text("Hit")
+	$("#stand").show()
 	CheckValue()
 }
 
-function DrawCard() {
+function Hit() {
 	request = $.ajax({
 		type: "post",
 		url: url,
 		data: {
-			controller: "player-draw-card",
+			controller: "player-hit",
 		}
 	})
 
@@ -66,27 +72,52 @@ function DrawCard() {
 	})
 }
 
-function BankDrawCards(){
-	ShowCard(cards.bank[1]);
+function Bank(){
+	DisableButtons()
+	console.log(cards.bank)
+	cards.bank.push(cache)
+	ShowCard(cards.bank[1])
+	BankHit()
+	EndGame()
+}
 
-	while(BankValue() < 17){
-		request = $.ajax({
-			type: "post",
-			url: url,
-			data: {
-				controller: "bank-draw-card"
-			}
-		})
+function BankHit(){
+	request = $.ajax({
+		type: "post",
+		url: url,
+		data: {
+			controller: "bank-hit"
+		}
+	})
 
-		request.done(function(data, status){
-			if (status == "success"){
-				var card = JSON.parse(data)
-				cards.bank.push(card)
-				ShowCard(card, "#bank-cards");
-				DisplayValues()
+	request.done(function(data, status){
+		if (status == "success"){
+			var card = JSON.parse(data)
+			cards.bank.push(card)
+			ShowCard(card, "#bank-cards");
+			DisplayValues()
+
+			if(BankValue() < 17){
+				BankHit();
 			}
-		})
-	}
+		}
+	})
+}
+
+function EndGame(){
+	request = $.ajax({
+		type: "post",
+		url: url,
+		data: {
+			controller: "end"
+		}
+	})
+
+	request.done(function(data, status){
+		if (status == "success"){
+			console.log(data)
+		}
+	})
 }
 
 // functions
@@ -94,32 +125,41 @@ function ShowCard(card, location){
 	let htmlIcon, htmlCard;
 	switch(card.color){
 		case "Clubs":
-			//
+			htmlIcon = '<i class="bi bi-suit-club-fill text-dark"></i>'
+			break
 		case "Spades":
-			//
+			htmlIcon = '<i class="bi bi-suit-spade-fill text-dark"></i>'
+			break
 		case "Hearts":
-			htmlIcon = "<i class='fas fa-heart'></i>"
+			htmlIcon = '<i class="bi bi-suit-heart-fill text-danger"></i>'
+			break
 		case "Diamonds":
-			//
+			htmlIcon = '<i class="bi bi-suit-diamond-fill text-danger"></i>'
+			break
 	}
-	htmlCard = "<p>" + htmlIcon + " " + card.number + "</p>"
+	htmlCard = '<h5 class="my-3 text-dark">' + htmlIcon + ' ' + card.number + '</h5>'
 
 	$(htmlCard).appendTo(location)
 }
 
 function CheckValue(){
-	const htmlBlackjack = "<p class='text-success mt-2'>Du hast einen Blackjack!</p>"
-	const htmlOvershoot = "<p class='text-danger mt-2'>Verloren! Du bist über einem Kartenwert von 21 </p>"
+	const htmlBlackjack = "<p class='text-success mt-4'>Blackjack!</p>"
+	const htmlOvershoot = "<p class='text-danger mt-4'>Bust! Your cards are worth more than 21</p>"
 
 	if(PlayerValue() >= 21){
-		$("#draw-card").addClass("disabled")
 		if(PlayerValue() == 21){
-			$("#draw-card").after(htmlBlackjack)
+			$("#buttons").after(htmlBlackjack)
 		}
 		else{
-			$("#draw-card").after(htmlOvershoot)
+			$("#buttons").after(htmlOvershoot)
 		}
 	}
+	Bank();
+}
+
+function DisableButtons(){
+	$("#hit").addClass("disabled")
+	$("#stand").addClass("disabled")
 }
 
 function BankValue(){
