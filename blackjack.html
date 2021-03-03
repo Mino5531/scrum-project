@@ -113,10 +113,21 @@
                 </nav>
                 <div class="container-fluid">
                     <h3 class="text-dark mb-1">Blackjack</h3>
-                    <div id="cards" class="mt-5">
-                        <p >Deine Karten:</p>
+                    <div class="mt-5 row">
+												<div class="col-3">
+													<p id="player-cards">Deine Karten:</p>
+													<p>Dein Gesamtwert: <span id="player-value"></span> </p>
+												</div>
+												<div class="col-3">
+													<p id="bank-cards">Bank Karten</p>
+													<p>Bank Gesamtwert: <span id="bank-value"></span></p>
+												</div>
                     </div>
-                    <button class="btn btn-primary mt-5" id="bj-start"><b>Karte ziehen</b></button>
+										<div class="form-group mt-5">
+											<label for="bet">Dein Einsatz (in $):</label>
+											<input type="text" name="bet" id="bet" class="form-control" style="width:10rem">
+											<button class="btn btn-primary mt-5" id="draw-card"><b>Starten</b></button>
+										</div>
                 </div>
             </div>
             <footer class="bg-white sticky-footer">
