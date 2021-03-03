@@ -1,7 +1,10 @@
+// variables
+
 const url = "assets/php/blackjack.php"
 const datatype = ""
 var request, cards, cache
 
+// event listeners
 
 $("#hit").click(function(){
 	if(cards == null){
@@ -12,9 +15,11 @@ $("#hit").click(function(){
 	}
 })
 
-$("#stand").click(function(){
+$("#stand").click(function() {
 	Bank()
 })
+
+// event handlers
 
 function StartGame(){
 	if ($("#bet").val() == "" || $("#bet").val() == 0){
@@ -34,8 +39,12 @@ function StartGame(){
 
 	request.done(function (data, status){
 		if (status == "success"){
-			cards = JSON.parse(data)
-
+			try {
+				cards = JSON.parse(data)
+			} catch (error) {
+				console.error("json could not be parsed! \n\nerror: " + error + "\n in function: StartGame()")
+				return
+			}
 			cache = cards.bank.pop()
 
 			for(i = 0; i < cards.player.length; i++){
@@ -45,6 +54,10 @@ function StartGame(){
 			ShowCard(cards.bank[0], "#bank-cards")
 
 			DisplayValues()
+		}
+		else{
+			console.error("ajax call was unsuccessfull! \n\nstatus: " + status)
+			return
 		}
 	})
 	$("#hit").text("Hit")
@@ -63,18 +76,27 @@ function Hit() {
 
 	request.done(function(data, status){
 		if (status == "success"){
+			try {
+				var card = JSON.parse(data)
+			} catch (error) {
+				console.error("json could not be parsed! \n\nerror: " + error + "\nin function: Hit()")
+				return
+			}
 			var card = JSON.parse(data)
 			ShowCard(card, "#player-cards")
 			cards.player.push(card)
 			DisplayValues()
 			CheckValue()
 		}
+		else{
+			console.error("ajax call was unsuccessfull! \n\nstatus: " + status)
+			return
+		}
 	})
 }
 
 function Bank(){
 	DisableButtons()
-	console.log(cards.bank)
 	cards.bank.push(cache)
 	ShowCard(cards.bank[1])
 	BankHit()
@@ -92,7 +114,12 @@ function BankHit(){
 
 	request.done(function(data, status){
 		if (status == "success"){
-			var card = JSON.parse(data)
+			try {
+				var card = JSON.parse(data)
+			} catch (error) {
+				console.error("json could not be parsed! \n\nerror: " + error + "\nin function: BankHit()")
+				return
+			}
 			cards.bank.push(card)
 			ShowCard(card, "#bank-cards");
 			DisplayValues()
@@ -100,6 +127,10 @@ function BankHit(){
 			if(BankValue() < 17){
 				BankHit();
 			}
+		}
+		else{
+			console.error("ajax call was unsuccessfull! \n\nstatus: " + status)
+			return
 		}
 	})
 }
@@ -109,13 +140,26 @@ function EndGame(){
 		type: "post",
 		url: url,
 		data: {
-			controller: "end"
+			controller: "end",
+			cards: cards,
+			bet: bet
 		}
 	})
 
 	request.done(function(data, status){
 		if (status == "success"){
-			console.log(data)
+			try {
+				var data = JSON.parse(data)
+			} catch (error) {
+				console.error("json could not be parsed! \n \nerror: " + error + "\nin function: EndGame()")
+				return
+			}
+			// code:
+			var msg = data.msg;
+		}
+		else{
+			console.error("ajax call was unsuccessfull! \n\nstatus: " + status)
+			return
 		}
 	})
 }
@@ -153,8 +197,8 @@ function CheckValue(){
 		else{
 			$("#buttons").after(htmlOvershoot)
 		}
+		Bank()
 	}
-	Bank();
 }
 
 function DisableButtons(){
