@@ -3,7 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
+
 -- Erstellungszeit: 05. Mrz 2021 um 08:01
+
 -- Server-Version: 10.3.27-MariaDB-0+deb10u1
 -- PHP-Version: 7.3.27-1~deb10u1
 
@@ -75,6 +77,7 @@ INSERT INTO `Card` (`Id`, `Color`, `Face`, `Value`) VALUES
 -- --------------------------------------------------------
 
 --
+
 -- Tabellenstruktur für Tabelle `Game`
 --
 
