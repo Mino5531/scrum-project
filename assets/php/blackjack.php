@@ -2,6 +2,8 @@
 
 $controller = $_POST["controller"];
 
+include_once("inc.php");
+
 // variables
 $bet;
 $cards = ["player"=>[], "bank"=>[]];
@@ -19,6 +21,9 @@ switch ($controller) {
 		break;
 	case "end":
 		EndController();
+		break;
+	case "blackjack":
+		BlackjackController();
 		break;
 }
 
@@ -60,10 +65,6 @@ function EndController(){
 		Loss();
 		return;
 	}
-	if (PlayerValue() == 21){
-		Blackjack();
-		return;
-	}
 	if (BankValue() > 21){
 		Win();
 		return;
@@ -78,9 +79,31 @@ function EndController(){
 	}
 }
 
+function BlackjackController(){
+	global $cards, $bet;
+
+	$cards = $_POST["cards"];
+	$bet = $_POST["bet"];
+
+	if(count($cards["player"]) == 2 && PlayerValue() == 21){
+		Blackjack();
+		return;
+	}
+}
+
 // functions
 function DrawCard(){
-    return ["color"=>"Diamonds", "number"=>"8", "value"=>8];
+	global $conn;
+
+	$i = rand(1, 52);
+	$sql = "SELECT Color, Face, Value FROM Card WHERE Id=$i";
+
+	$result = mysqli_query($conn, $sql);
+
+	if (mysqli_num_rows($result) > 0){
+		$card = mysqli_fetch_assoc($result);
+		return $card;
+	}
 }
 
 function BankValue(){
@@ -88,7 +111,7 @@ function BankValue(){
 	$bank = $cards["bank"];
 	$value = 0;
 	for ($i=0; $i < count($bank); $i++) { 
-		$value += $bank[$i]["value"];
+		$value += $bank[$i]["Value"];
 	}
 	return $value;
 }
@@ -98,7 +121,7 @@ function PlayerValue(){
 	$player = $cards["player"];
 	$value = 0;
 	for ($i=0; $i < count($player); $i++) { 
-		$value += $player[$i]["value"];
+		$value += $player[$i]["Value"];
 	}
 	return $value;
 }
@@ -110,14 +133,20 @@ function Win(){
 	$amount = $bet;
 
 	$msg = "You've won! $amount$ will be transfered to your account";
+	$balance = Balance() + $amount;
+	$win = true;
 
-	echo json_encode($msg);
+	echo json_encode(["msg"=>$msg, "balance"=>$balance, "win"=>$win]);
 }
 
 function Loss(){
-	$msg = "You've lost!";
+	global $bet;
+	$amount = $bet;
+	$msg = "You've lost! $amount$ will be subtracted from your account balance";
+	$balance = Balance() - $amount;
+	$win = false;
 
-	echo json_encode($msg);
+	echo json_encode(["msg"=>$msg, "balance"=>$balance, "win"=>$win]);
 }
 
 function Blackjack(){
@@ -126,6 +155,24 @@ function Blackjack(){
 	$amount = $bet * 1.5;
 
 	$msg = "Blackjack! $amount$ will be transfered to your account";
+	$balance = Balance() + $amount;
+	$win = true;
+
+	echo json_encode(["msg"=>$msg, "balance"=>$balance, "win"=>$win]);
 }
 
+function Balance(){
+	// not yet implemented
+	return 43;
+}
+
+function SubtractBalance($value){
+	// Not yet implemented
+	return;
+}
+
+function AddBalance($value){
+	// not yet implemented
+	return;
+}
 ?>

@@ -1,7 +1,6 @@
 // variables
 
 const url = "assets/php/blackjack.php"
-const datatype = ""
 var request, cards, cache
 
 // event listeners
@@ -42,7 +41,7 @@ function StartGame(){
 			try {
 				cards = JSON.parse(data)
 			} catch (error) {
-				console.error("json could not be parsed! \n\nerror: " + error + "\n in function: StartGame()")
+				jsonParseError(error, data)
 				return
 			}
 			cache = cards.bank.pop()
@@ -54,18 +53,50 @@ function StartGame(){
 			ShowCard(cards.bank[0], "#bank-cards")
 
 			DisplayValues()
+
+			$("#hit").text("Hit")
+			$("#stand").show()
+			CheckValue()
 		}
 		else{
-			console.error("ajax call was unsuccessfull! \n\nstatus: " + status)
+			ajaxError(status)
 			return
 		}
 	})
-	$("#hit").text("Hit")
-	$("#stand").show()
-	CheckValue()
+}
+
+function Blackjack(){
+	request = $.ajax({
+		type: "post",
+		url: url,
+		data: {
+			controller: "blackjack",
+			cards: cards
+		}
+	})
+
+	request.done(function(data, status){
+		if (status == "success"){
+			// code
+			try {
+				var data = JSON.parse(data);
+			} catch (error) {
+				jsonParseError(error, data)
+				return
+			}
+			var msg = data.msg
+			var balance = data.balance;
+
+			$("#result-msg").text(msg)
+		}
+		else{
+			ajaxError(status)
+		}
+	})
 }
 
 function Hit() {
+	PushCard();
 	request = $.ajax({
 		type: "post",
 		url: url,
@@ -79,7 +110,7 @@ function Hit() {
 			try {
 				var card = JSON.parse(data)
 			} catch (error) {
-				console.error("json could not be parsed! \n\nerror: " + error + "\nin function: Hit()")
+				jsonParseError(error, data)
 				return
 			}
 			var card = JSON.parse(data)
@@ -89,7 +120,7 @@ function Hit() {
 			CheckValue()
 		}
 		else{
-			console.error("ajax call was unsuccessfull! \n\nstatus: " + status)
+			ajaxError(status)
 			return
 		}
 	})
@@ -97,9 +128,10 @@ function Hit() {
 
 function Bank(){
 	DisableButtons()
-	cards.bank.push(cache)
-	ShowCard(cards.bank[1])
-	BankHit()
+	PushCard()
+	if (BankValue() < 17){
+		BankHit()
+	}
 	EndGame()
 }
 
@@ -117,7 +149,7 @@ function BankHit(){
 			try {
 				var card = JSON.parse(data)
 			} catch (error) {
-				console.error("json could not be parsed! \n\nerror: " + error + "\nin function: BankHit()")
+				jsonParseError(error, data);
 				return
 			}
 			cards.bank.push(card)
@@ -127,9 +159,12 @@ function BankHit(){
 			if(BankValue() < 17){
 				BankHit();
 			}
+			else{
+				EndGame()
+			}
 		}
 		else{
-			console.error("ajax call was unsuccessfull! \n\nstatus: " + status)
+			ajaxError(status)
 			return
 		}
 	})
@@ -142,7 +177,7 @@ function EndGame(){
 		data: {
 			controller: "end",
 			cards: cards,
-			bet: bet
+			bet: $("#bet").val()
 		}
 	})
 
@@ -151,14 +186,30 @@ function EndGame(){
 			try {
 				var data = JSON.parse(data)
 			} catch (error) {
-				console.error("json could not be parsed! \n \nerror: " + error + "\nin function: EndGame()")
+				jsonParseError(error, data);
 				return
 			}
 			// code:
 			var msg = data.msg;
+			var balance = data.balance;
+			var win = data.win;
+
+			if (win){
+				$("#result-msg").addClass("text-success")
+			}
+			else{
+				$("#result-msg").addClass("text-danger")
+			}
+			$("#result-msg").text(msg)
+
+			EnableButtons()
+			$("#hit").hide()
+			$("#stand").hide()
+
+			$("#restart").show()
 		}
 		else{
-			console.error("ajax call was unsuccessfull! \n\nstatus: " + status)
+			ajaxError(status)
 			return
 		}
 	})
@@ -167,7 +218,7 @@ function EndGame(){
 // functions
 function ShowCard(card, location){
 	let htmlIcon, htmlCard;
-	switch(card.color){
+	switch(card.Color){
 		case "Clubs":
 			htmlIcon = '<i class="bi bi-suit-club-fill text-dark"></i>'
 			break
@@ -181,21 +232,19 @@ function ShowCard(card, location){
 			htmlIcon = '<i class="bi bi-suit-diamond-fill text-danger"></i>'
 			break
 	}
-	htmlCard = '<h5 class="my-3 text-dark">' + htmlIcon + ' ' + card.number + '</h5>'
+	htmlCard = '<h5 class="my-3 text-dark">' + htmlIcon + ' ' + card.Face + '</h5>'
 
 	$(htmlCard).appendTo(location)
 }
 
 function CheckValue(){
-	const htmlBlackjack = "<p class='text-success mt-4'>Blackjack!</p>"
-	const htmlOvershoot = "<p class='text-danger mt-4'>Bust! Your cards are worth more than 21</p>"
-
 	if(PlayerValue() >= 21){
-		if(PlayerValue() == 21){
-			$("#buttons").after(htmlBlackjack)
+		if(PlayerValue() == 21 && cards.player.length == 2){
+			Blackjack()
+			return;
 		}
-		else{
-			$("#buttons").after(htmlOvershoot)
+		else if(PlayerValue() > 21){
+			DisableButtons()
 		}
 		Bank()
 	}
@@ -206,13 +255,18 @@ function DisableButtons(){
 	$("#stand").addClass("disabled")
 }
 
+function EnableButtons(){
+	$("#hit").removeClass("disabled")
+	$("#stand").removeClass("disabled")
+}
+
 function BankValue(){
 	if(cards == null){
 		return 0;
 	}
 	var value = 0
 	for(let i = 0; i < cards.bank.length; i++){
-		value += cards.bank[i].value
+		value += parseInt(cards.bank[i].Value)
 	}
 
 	return value
@@ -225,7 +279,7 @@ function PlayerValue(){
 
 	var value = 0
 	for(let i = 0; i < cards.player.length; i++){
-		value += cards.player[i].value
+		value += parseInt(cards.player[i].Value)
 	}
 
 	return value
@@ -234,4 +288,21 @@ function PlayerValue(){
 function DisplayValues(){
 	$("#bank-value").text(BankValue())
 	$("#player-value").text(PlayerValue())
+}
+
+function ajaxError(status){
+	console.error("ajax call was unsuccessfull! \n\nstatus: " + status)
+}
+
+function jsonParseError(error, data){
+	console.error("json could not be parsed! \n\nerror: " + error + "\n\nphp: " + data)
+}
+
+function PushCard(){
+	if (cache != null){
+		cards.bank.push(cache)
+		DisplayValues()
+		ShowCard(cache, "#bank-cards")
+		cache = null;
+	}
 }

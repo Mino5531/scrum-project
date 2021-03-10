@@ -131,13 +131,15 @@
                     <div class="form-group mt-5">
                         <label for="bet" class="mb-1">Your bet (in $):</label>
                         <input type="text" name="bet" id="bet" class="form-control" style="width:10rem">
-                        <div class="row mt-5" id="buttons" style="width: 75%;">
-                            <div class="col-1">
+                        <div class="row mt-5" id="buttons">
+                            <div class="col-3">
                                 <button class="btn btn-primary" id="hit" style="width: 100%;">Place bet</button>
+                                <a href="blackjack.html" class="btn btn-success text-white" id="restart" style="display: none; width: 100%">Neues Spiel</a>
                             </div>
-                            <div class="col-1">
+                            <div class="col-3">
                                 <button class="btn btn-primary" id="stand" style="display: none;width: 100%;">Stand</button>
                             </div>
+                            <p id="result-msg" class="mt-5"></p>
                         </div>
                     </div>
                 </div>
