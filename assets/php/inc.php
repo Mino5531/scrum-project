@@ -1,8 +1,8 @@
 <?
 
 $servername = "localhost";
-$username = "swp";
-$password = "swp";
+$username = "swpuser";
+$password = "swpuser";
 $dbname = "swp";
 
 $conn = mysqli_connect($servername, $username, $password, $dbname);
