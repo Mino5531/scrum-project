@@ -4,14 +4,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Games - Sloterino</title>
+    <title>Blackjack - Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/profile.css">
     <link rel="stylesheet" href="assets/css/untitled.css">
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 
 <body id="page-top">
@@ -23,7 +25,7 @@
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa fa-gamepad"></i><span>Games</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-gamepad"></i><span>Games</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i class="fas fa-user"></i><span>Profile</span></a></li>
                     <li class="nav-item"></li>
                     <li class="nav-item"></li>
@@ -109,17 +111,36 @@
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-dark mb-0">Games</h3>
+                    <h3 class="text-dark mb-1">Blackjack</h3>
+                    <div class="mt-5 row" style="height: 20rem;">
+                        <div class="col-3">
+                            <p id="player-cards" class="mb-5">Your cards:</p>
+                        </div>
+                        <div class="col-3">
+                            <p id="bank-cards" class="mb-5">Bank cards</p>
+                        </div>
                     </div>
                     <div class="row">
-                        <ul class="list-group">
-                            <li class="list-group-item"><button class="btn float-end rounded-circle border-0" type="button"><i class="fa fa-arrow-right"></i></button><strong class="gametitle">Roulette</strong></li>
-                            <li class="list-group-item"><button class="btn float-end rounded-circle border-0" type="button"><i class="fa fa-arrow-right"></i></button><strong class="gametitle">Lotto</strong></li>
-                            <li class="list-group-item"><button class="btn float-end rounded-circle border-0" type="button"><i class="fa fa-arrow-right"></i></button><strong class="gametitle">Poker</strong></li>
-                            <li class="list-group-item"><button id="btn-blackjack" class="btn float-end rounded-circle border-0" type="button"><i class="fa fa-arrow-right"></i></button><strong class="gametitle">Blackjack</strong></li>
-                            <li class="list-group-item"><button class="btn float-end rounded-circle border-0" type="button"><i class="fa fa-arrow-right"></i></button><strong class="gametitle">Slots</strong></li>
-                        </ul>
+                        <div class="col-3">
+                            <p>Your value: <span id="player-value"></span> </p>
+                        </div>
+                        <div class="col-3">
+                            <p>Bank value: <span id="bank-value"></span></p>
+                        </div>
+                    </div>
+                    <div class="form-group mt-5">
+                        <label for="bet" class="mb-1">Your bet (in $):</label>
+                        <input type="text" name="bet" id="bet" class="form-control" style="width:10rem">
+                        <div class="row mt-5" id="buttons">
+                            <div class="col-3">
+                                <button class="btn btn-primary" id="hit" style="width: 100%;">Place bet</button>
+                                <a href="blackjack.html" class="btn btn-success text-white" id="restart" style="display: none; width: 100%">Neues Spiel</a>
+                            </div>
+                            <div class="col-3">
+                                <button class="btn btn-primary" id="stand" style="display: none;width: 100%;">Stand</button>
+                            </div>
+                            <p id="result-msg" class="mt-5"></p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -128,13 +149,13 @@
                     <div class="text-center my-auto copyright"><span>Copyright © Sloterino 2021</span></div>
                 </div>
             </footer>
-        </div>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
-    <script src="assets/js/index.js"></script>
+    <script src="assets/js/blackjack.js"></script>
 </body>
 
 </html>
