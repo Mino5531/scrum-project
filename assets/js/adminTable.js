@@ -28,7 +28,8 @@ for(var i = 0+(page*count); i < maxRead;i++){
       cells.push(nRow.insertCell());
    }
    var editButton = document.createElement("button");
-   editButton.onclick = function(){window.location.href = 'admin-edit.html?id='+data[i].UserID;}
+   editButton.id = data[i].UserID;
+   editButton.onclick = function(){editUser(this.id)};
    editButton.classList.add("float-right");
    editButton.classList.add("btn");
    editButton.classList.add("btn-primary");
@@ -78,4 +79,8 @@ for(var i=0;i<pagecount;i++){
  .always(function() {
     console.log( "complete" );
  })};
+ function editUser(id){
+    console.log(id);
+    window.location = "admin-edit.html?id="+id;
+ }
 getJson(tableSelect.value,page);
