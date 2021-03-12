@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<?php 
+$conn = mysqli_connect("localhost","swpuser","swpuser","swp");
+if(mysqli_connect_errno()){
+    die("DB Connection-Error please contact the server admin");
+}
+?>
 <html>
 
 <head>
@@ -25,9 +31,19 @@
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-gamepad"></i><span>Games</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i class="fas fa-user"></i><span>Profile</span></a></li>
-                    <li class="nav-item"></li>
-                    <li class="nav-item"></li>
-                    <li class="nav-item"></li>
+                    <?php 
+                    $sql = "SELECT Admin FROM User WHERE UserID = ". "1";//$_SESSION['user-id'];
+                    $res = $conn->query($sql);
+                    if($res->num_rows > 0){
+                        if($res->fetch_assoc()["Admin"] == 1){
+                            echo('<li class="nav-item"><a class="nav-link active" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
+                        }else{
+                            header("Location: profile.html");
+                        }
+                    }else{
+                        die("Invalid or no userID");
+                    }
+                    ?>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>
@@ -138,6 +154,7 @@
                                             <th>Last Name</th>
                                             <th>Country</th>
                                             <th>Balance</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -191,6 +208,7 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="assets/js/get.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/adminTable.js"></script>
