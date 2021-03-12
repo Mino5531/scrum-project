@@ -1,19 +1,6 @@
 var tableInfo = document.getElementById('dataTable_info');
 var paginator = document.getElementById('paginator')
 var tableSelect = document.getElementById('dataTable_select');
-var GET = {};
-if(document.location.toString().indexOf('?') !== -1) {
-    var query = document.location
-                   .toString()
-                   .replace(/^.*?\?/, '')
-                   .replace(/#.*$/, '')
-                   .split('&');
-
-    for(var i=0, l=query.length; i<l; i++) {
-       var aux = decodeURIComponent(query[i]).split('=');
-       GET[aux[0]] = aux[1];
-    }
-}
 var page;
  page = GET["page"];
  if(page == undefined){
@@ -37,9 +24,17 @@ for(var i = 0+(page*count); i < maxRead;i++){
    var nRow = tbody.insertRow();
    //Cells
    var cells = [];
-   for(var j = 0; j < 6; j++){
+   for(var j = 0; j < 7; j++){
       cells.push(nRow.insertCell());
    }
+   var editButton = document.createElement("button");
+   editButton.onclick = function(){window.location.href = 'admin-edit.html?id='+data[i].UserID;}
+   editButton.classList.add("float-right");
+   editButton.classList.add("btn");
+   editButton.classList.add("btn-primary");
+   editButton.classList.add("btn-sm");
+   editButton.classList.add("fas");
+   editButton.classList.add("fa-user-edit");
    //Text
    var text = [];
    text.push(document.createTextNode(data[i].Username));
@@ -48,7 +43,8 @@ for(var i = 0+(page*count); i < maxRead;i++){
    text.push(document.createTextNode(data[i].Nachname));
    text.push(document.createTextNode('Germany'));
    text.push(document.createTextNode(data[i].Kontostand+'$'));
-   for(var j = 0; j < 6; j++){
+   text.push(editButton);
+   for(var j = 0; j < 7; j++){
       cells[j].appendChild(text[j]);
    }
    tableInfo.innerHTML = "Showing 1 to "+maxRead+" of "+data.length;
