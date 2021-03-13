@@ -1,6 +1,8 @@
 <?php
 	session_start();
-
+    if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
+        header('location: login.html');
+    }
 #Verbindung mit der Datenbank
 require ("inc.php");
   $mysqlconnection = mysqli_connect($host,$user,$passwd,$datenbank) or 
@@ -21,8 +23,8 @@ require ("inc.php");
 	$Ende = false;
 	$gewonnenerPreis = 0;
 	
-	####$SESSION_userID = $_SESSION['userID'];
-	$SESSION_userID = 1;
+	$SESSION_userID = $_SESSION['user-id'];
+	//$SESSION_userID = 1;
 ?>
 <!DOCTYPE html>
 <html>

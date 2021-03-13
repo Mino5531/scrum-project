@@ -1,3 +1,54 @@
+<?php
+session_start();
+if(isset($_SESSION['login_user']) && isset($_SESSION['user-id'])){
+    header('location: profile.html');
+}
+$link = mysqli_connect("127.0.0.1", "swpuser", "swpuser", "swp");
+if ($link === false){
+    die("connection failed: " . mysqli_connect_error());
+}
+
+if($_SERVER["REQUEST_METHOD"] == "POST") {
+    $firstname = $_POST["FirstName"];
+    $lastname = $_POST["LastName"];
+    $email = $_POST["Email"];
+    $password = $_POST["Password"];
+    $username = $_POST["Username"];
+    $repeatpassword = $_POST["RepeatPassword"];
+
+    if(empty($firstname)){
+        die("Invalid name");
+    }
+    if(empty($lastname)){
+        die("Invalid name");
+    }
+    if(empty($email)){
+        die("Invalid email-address");
+    }
+    if(empty($username)){
+        die("invalid username");
+    }
+    if(empty($password)){
+        die("invalid password");
+    }
+    if(empty($repeatpassword)){
+        die("invalid repeat");
+    }
+    if ($password != $repeatpassword){
+        die("No matching password input");
+    }
+    $sql = "INSERT INTO User (Vorname, Nachname, Email, Username, Kontostand, Admin, Passwort) 
+    VALUES ('$firstname', '$lastname', '$email','$username',0, 0, '$password')";
+
+    if (mysqli_query($link, $sql)) {
+        header("location: login.html");
+        
+    }else{
+    echo(mysqli_error($link));
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -6,7 +57,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Register - Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
@@ -20,84 +72,53 @@
             <div class="card-body p-0">
                 <div class="row">
                     <div class="col-lg-5 d-none d-lg-flex">
-                        <div class="flex-grow-1 bg-register-image" style="background-image: url(&quot;assets/img/placeholder/placeholder-3x4.png&quot;);"></div>
+                        <div class="flex-grow-1 bg-register-image"
+                            style="background-image: url(&quot;assets/img/placeholder/placeholder-3x4.png&quot;);">
+                        </div>
                     </div>
                     <div class="col-lg-7">
                         <div class="p-5">
                             <div class="text-center">
                                 <h4 class="text-dark mb-4">Create an Account!</h4>
                             </div>
-                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                            <form action="<?php echo htmlspecialchars($_SERVER[" PHP_SELF"]); ?>" method="POST">
                                 <div class="row mb-3">
-                                    <div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user" type="text" id="exampleFirstName" placeholder="First Name" name="FirstName"></div>
-                                    <div class="col-sm-6"><input class="form-control form-control-user" type="text" id="exampleFirstName" placeholder="Last Name" name="LastName"></div>
+                                    <div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user"
+                                            type="text" id="exampleFirstName" placeholder="First Name" name="FirstName">
+                                    </div>
+                                    <div class="col-sm-6"><input class="form-control form-control-user" type="text"
+                                            id="exampleFirstName" placeholder="Last Name" name="LastName"></div>
                                 </div>
-                                <div class="mb-3"><input class="form-control form-control-user" type="email" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Email Address" name="Email"></div>
-                                <div class="mb-3"><input class="form-control form-control-user" type="text" id="exampleUserName" placeholder="Username" name="Username"></div>
+                                <div class="mb-3"><input class="form-control form-control-user" type="email"
+                                        id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Email Address"
+                                        name="Email"></div>
+                                <div class="mb-3"><input class="form-control form-control-user" type="text"
+                                        id="exampleUserName" placeholder="Username" name="Username"></div>
                                 <div class="row mb-3">
-                                    <div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user" type="password" id="examplePasswordInput" placeholder="Password" name="Password"></div>
-                                    <div class="col-sm-6"><input class="form-control form-control-user" type="password" id="exampleRepeatPasswordInput" placeholder="Repeat Password" name="RepeatPassword"></div>
-                                </div><button class="btn btn-primary d-block btn-user w-100" type="submit">Register Account</button>
+                                    <div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user"
+                                            type="password" id="examplePasswordInput" placeholder="Password"
+                                            name="Password"></div>
+                                    <div class="col-sm-6"><input class="form-control form-control-user" type="password"
+                                            id="exampleRepeatPasswordInput" placeholder="Repeat Password"
+                                            name="RepeatPassword"></div>
+                                </div><button class="btn btn-primary d-block btn-user w-100" type="submit">Register
+                                    Account</button>
                                 <hr>
                             </form>
-                            <div class="text-center"><a class="small" href="forgot-password.php">Forgot Password?</a></div>
-                            <div class="text-center"><a class="small" href="login.php">Already have an account? Login!</a></div>
+                            <div class="text-center"><a class="small" href="forgot-password.html">Forgot Password?</a>
+                            </div>
+                            <div class="text-center"><a class="small" href="login.html">Already have an account?
+                                    Login!</a></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
-<?php
-
-    $link = mysqli_connect("127.0.0.1", "swpuser", "swpuser", "swp");
-    if ($link === false){
-        die("connection failed: " . mysqli_connect_error());
-    }
-
-    if($_SERVER["REQUEST_METHOD"] == "POST") {
-        $firstname = $_POST["FirstName"];
-        $lastname = $_POST["LastName"];
-        $email = $_POST["Email"];
-        $password = $_POST["Password"];
-        $username = $_POST["Username"];
-        $repeatpassword = $_POST["RepeatPassword"];
-    
-        if(empty($firstname)){
-            die("Invalid name");
-        }
-        if(empty($lastname)){
-            die("Invalid name");
-        }
-        if(empty($email)){
-            die("Invalid email-address");
-        }
-        if(empty($username)){
-            die("invalid username");
-        }
-        if(empty($password)){
-            die("invalid password");
-        }
-        if(empty($repeatpassword)){
-            die("invalid repeat");
-        }
-        if ($password != $repeatpassword){
-            die("No matching password input");
-        }
-        $sql = "INSERT INTO User (Vorname, Nachname, Email, Username, Kontostand, Admin, Passwort) 
-        VALUES ('$firstname', '$lastname', '$email','$username',0, 0, '$password')";
-
-        if (mysqli_query($link, $sql)) {
-            header("location: login.php");
-            
-        }else{
-        echo(mysqli_error($link));
-        }
-    }
-?>
 </body>
 
 </html>

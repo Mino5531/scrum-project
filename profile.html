@@ -1,3 +1,8 @@
+<?php 
+session_start();
+if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
+    header('location: login.html');
+} ?>
 <!DOCTYPE html>
 <html>
 
@@ -6,7 +11,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Profile - Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
@@ -17,67 +23,87 @@
 <body id="page-top">
     <div id="wrapper">
         <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
-            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+            <div class="container-fluid d-flex flex-column p-0"><a
+                    class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
                     <div class="sidebar-brand-icon"><i class="fab fa-viacoin"></i></div>
                     <div class="sidebar-brand-text mx-3"><span>Sloterino</span></div>
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-gamepad"></i><span>Games</span></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="profile.html"><i class="fas fa-user"></i><span>Profile</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html"><i
+                                class="fa fa-gamepad"></i><span>Games</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="profile.html"><i
+                                class="fas fa-user"></i><span>Profile</span></a></li>
                     <li class="nav-item"></li>
                     <li class="nav-item"></li>
                     <li class="nav-item"></li>
                 </ul>
-                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
+                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0"
+                        id="sidebarToggle" type="button"></button></div>
             </div>
         </nav>
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content">
                 <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
-                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
+                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle me-3"
+                            id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
                         <ul class="navbar-nav flex-nowrap ms-auto">
-                            <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-search"></i></a>
-                                <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
+                            <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link"
+                                    aria-expanded="false" data-bs-toggle="dropdown" href="#"><i
+                                        class="fas fa-search"></i></a>
+                                <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in"
+                                    aria-labelledby="searchDropdown">
                                     <form class="me-auto navbar-search w-100">
-                                        <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
-                                            <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
+                                        <div class="input-group"><input class="bg-light form-control border-0 small"
+                                                type="text" placeholder="Search for ...">
+                                            <div class="input-group-append"><button class="btn btn-primary py-0"
+                                                    type="button"><i class="fas fa-search"></i></button></div>
                                         </div>
                                     </form>
                                 </div>
                             </li>
                             <li class="nav-item dropdown no-arrow mx-1">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"></a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
+                                        aria-expanded="false" data-bs-toggle="dropdown" href="#"></a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
-                                        <h6 class="dropdown-header">alerts center</h6><a class="dropdown-item d-flex align-items-center" href="#">
+                                        <h6 class="dropdown-header">alerts center</h6><a
+                                            class="dropdown-item d-flex align-items-center" href="#">
                                             <div class="me-3">
-                                                <div class="bg-primary icon-circle"><i class="fas fa-file-alt text-white"></i></div>
+                                                <div class="bg-primary icon-circle"><i
+                                                        class="fas fa-file-alt text-white"></i></div>
                                             </div>
                                             <div><span class="small text-gray-500">December 12, 2019</span>
                                                 <p>A new monthly report is ready to download!</p>
                                             </div>
                                         </a><a class="dropdown-item d-flex align-items-center" href="#">
                                             <div class="me-3">
-                                                <div class="bg-success icon-circle"><i class="fas fa-donate text-white"></i></div>
+                                                <div class="bg-success icon-circle"><i
+                                                        class="fas fa-donate text-white"></i></div>
                                             </div>
                                             <div><span class="small text-gray-500">December 7, 2019</span>
                                                 <p>$290.29 has been deposited into your account!</p>
                                             </div>
                                         </a><a class="dropdown-item d-flex align-items-center" href="#">
                                             <div class="me-3">
-                                                <div class="bg-warning icon-circle"><i class="fas fa-exclamation-triangle text-white"></i></div>
+                                                <div class="bg-warning icon-circle"><i
+                                                        class="fas fa-exclamation-triangle text-white"></i></div>
                                             </div>
                                             <div><span class="small text-gray-500">December 2, 2019</span>
-                                                <p>Spending Alert: We've noticed unusually high spending for your account.</p>
+                                                <p>Spending Alert: We've noticed unusually high spending for your
+                                                    account.</p>
                                             </div>
-                                        </a><a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                                        </a><a class="dropdown-item text-center small text-gray-500" href="#">Show All
+                                            Alerts</a>
                                     </div>
                                 </div>
                             </li>
                             <li class="nav-item dropdown no-arrow mx-1">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: rgb(84,85,96);">43$</a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
+                                        aria-expanded="false" data-bs-toggle="dropdown" href="#"
+                                        style="color: rgb(84,85,96);">43$</a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
-                                        <h6 class="dropdown-header">Recent Transactions</h6><a class="dropdown-item d-flex align-items-center" href="#">
+                                        <h6 class="dropdown-header">Recent Transactions</h6><a
+                                            class="dropdown-item d-flex align-items-center" href="#">
                                             <div class="fw-bold">
                                                 <div class="text-truncate"><span>Game: Lotto</span></div>
                                                 <p class="small text-gray-500 mb-0">-54$ · 2w ago</p>
@@ -92,16 +118,32 @@
                                                 <div class="text-truncate"><span>Deposit</span></div>
                                                 <p class="small text-gray-500 mb-0">+100$ · 3w ago</p>
                                             </div>
-                                        </a><a class="dropdown-item text-center small text-gray-500" href="#">Show all transactions</a>
+                                        </a><a class="dropdown-item text-center small text-gray-500" href="#">Show all
+                                            transactions</a>
                                     </div>
                                 </div>
-                                <div class="shadow dropdown-list dropdown-menu dropdown-menu-end" aria-labelledby="alertsDropdown"></div>
+                                <div class="shadow dropdown-list dropdown-menu dropdown-menu-end"
+                                    aria-labelledby="alertsDropdown"></div>
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">Username</span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
-                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="#"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" href="#"><i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a><a class="dropdown-item" href="#"><i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Activity log</a>
-                                        <div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
+                                        aria-expanded="false" data-bs-toggle="dropdown" href="#"><span
+                                            class="d-none d-lg-inline me-2 text-gray-600 small">
+                                            <?php echo($_SESSION['username']); ?>
+                                        </span><img class="border rounded-circle img-profile"
+                                            src="assets/img/avatars/avatar1.jpeg"></a>
+                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a
+                                            class="dropdown-item" href="#"><i
+                                                class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a
+                                            class="dropdown-item" href="#"><i
+                                                class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a><a
+                                            class="dropdown-item" href="#"><i
+                                                class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Activity
+                                            log</a>
+                                        <div class="dropdown-divider"></div><a class="dropdown-item"
+                                            href="logout.html"><i
+                                                class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
                                     </div>
                                 </div>
                             </li>
@@ -113,8 +155,10 @@
                     <div class="row mb-3">
                         <div class="col-lg-4">
                             <div class="card mb-3">
-                                <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4" src="assets/img/dogs/image2.jpeg" width="160" height="160">
-                                    <div class="mb-3"><button class="btn btn-primary btn-sm" type="button">Change Picture</button></div>
+                                <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4"
+                                        src="assets/img/dogs/image2.jpeg" width="160" height="160">
+                                    <div class="mb-3"><button class="btn btn-primary btn-sm" type="button">Change
+                                            Picture</button></div>
                                 </div>
                             </div>
                             <div class="card shadow mb-4">
@@ -124,23 +168,33 @@
                                 <div class="card-body">
                                     <h4 class="small fw-bold">Slot machine<span class="float-end">30%</span></h4>
                                     <div class="progress progress-sm mb-3">
-                                        <div class="progress-bar bg-danger" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%;"><span class="visually-hidden">30%</span></div>
+                                        <div class="progress-bar bg-danger" aria-valuenow="30" aria-valuemin="0"
+                                            aria-valuemax="100" style="width: 30%;"><span
+                                                class="visually-hidden">30%</span></div>
                                     </div>
                                     <h4 class="small fw-bold">Blackjack<span class="float-end">20%</span></h4>
                                     <div class="progress progress-sm mb-3">
-                                        <div class="progress-bar bg-warning" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"><span class="visually-hidden">20%</span></div>
+                                        <div class="progress-bar bg-warning" aria-valuenow="20" aria-valuemin="0"
+                                            aria-valuemax="100" style="width: 20%;"><span
+                                                class="visually-hidden">20%</span></div>
                                     </div>
                                     <h4 class="small fw-bold">Roulette<span class="float-end">15%</span></h4>
                                     <div class="progress progress-sm mb-3">
-                                        <div class="progress-bar bg-primary" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" style="width: 15%;"><span class="visually-hidden">15%</span></div>
+                                        <div class="progress-bar bg-primary" aria-valuenow="15" aria-valuemin="0"
+                                            aria-valuemax="100" style="width: 15%;"><span
+                                                class="visually-hidden">15%</span></div>
                                     </div>
                                     <h4 class="small fw-bold">Poker<span class="float-end">10%</span></h4>
                                     <div class="progress progress-sm mb-3">
-                                        <div class="progress-bar bg-info" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 10%;"><span class="visually-hidden">10%</span></div>
+                                        <div class="progress-bar bg-info" aria-valuenow="10" aria-valuemin="0"
+                                            aria-valuemax="100" style="width: 10%;"><span
+                                                class="visually-hidden">10%</span></div>
                                     </div>
                                     <h4 class="small fw-bold">Lotto<span class="float-end">5%</span></h4>
                                     <div class="progress progress-sm mb-3">
-                                        <div class="progress-bar bg-success" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 5%;"><span class="visually-hidden">5%</span></div>
+                                        <div class="progress-bar bg-success" aria-valuenow="5" aria-valuemin="0"
+                                            aria-valuemax="100" style="width: 5%;"><span
+                                                class="visually-hidden">5%</span></div>
                                     </div>
                                 </div>
                             </div>
@@ -157,7 +211,8 @@
                                                 </div>
                                                 <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
                                             </div>
-                                            <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5% since last month</p>
+                                            <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5%
+                                                since last month</p>
                                         </div>
                                     </div>
                                 </div>
@@ -171,7 +226,8 @@
                                                 </div>
                                                 <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
                                             </div>
-                                            <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5% since last month</p>
+                                            <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5%
+                                                since last month</p>
                                         </div>
                                     </div>
                                 </div>
@@ -186,21 +242,35 @@
                                             <form>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="username"><strong>Username</strong></label><input class="form-control" type="text" id="username" placeholder="user.name" name="username"></div>
+                                                        <div class="mb-3"><label class="form-label"
+                                                                for="username"><strong>Username</strong></label><input
+                                                                class="form-control" type="text" id="username"
+                                                                placeholder="user.name" name="username"></div>
                                                     </div>
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="email"><strong>Email Address</strong></label><input class="form-control" type="email" id="email" placeholder="user@example.com" name="email"></div>
+                                                        <div class="mb-3"><label class="form-label"
+                                                                for="email"><strong>Email Address</strong></label><input
+                                                                class="form-control" type="email" id="email"
+                                                                placeholder="user@example.com" name="email"></div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="first_name"><strong>First Name</strong></label><input class="form-control" type="text" id="first_name" placeholder="John" name="first_name" readonly=""></div>
+                                                        <div class="mb-3"><label class="form-label"
+                                                                for="first_name"><strong>First
+                                                                    Name</strong></label><input class="form-control"
+                                                                type="text" id="first_name" placeholder="John"
+                                                                name="first_name" readonly=""></div>
                                                     </div>
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Last Name</strong></label><input class="form-control" type="text" id="last_name" placeholder="Doe" name="last_name" readonly=""></div>
+                                                        <div class="mb-3"><label class="form-label"
+                                                                for="last_name"><strong>Last Name</strong></label><input
+                                                                class="form-control" type="text" id="last_name"
+                                                                placeholder="Doe" name="last_name" readonly=""></div>
                                                     </div>
                                                 </div>
-                                                <div class="mb-3"><button class="btn btn-primary btn-sm" type="submit">Save Settings</button></div>
+                                                <div class="mb-3"><button class="btn btn-primary btn-sm"
+                                                        type="submit">Save Settings</button></div>
                                             </form>
                                         </div>
                                     </div>
@@ -210,16 +280,26 @@
                                         </div>
                                         <div class="card-body">
                                             <form>
-                                                <div class="mb-3"><label class="form-label" for="address"><strong>Address</strong></label><input class="form-control" type="text" id="address" placeholder="Sunset Blvd, 38" name="address"></div>
+                                                <div class="mb-3"><label class="form-label"
+                                                        for="address"><strong>Address</strong></label><input
+                                                        class="form-control" type="text" id="address"
+                                                        placeholder="Sunset Blvd, 38" name="address"></div>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="city"><strong>City</strong></label><input class="form-control" type="text" id="city" placeholder="Los Angeles" name="city"></div>
+                                                        <div class="mb-3"><label class="form-label"
+                                                                for="city"><strong>City</strong></label><input
+                                                                class="form-control" type="text" id="city"
+                                                                placeholder="Los Angeles" name="city"></div>
                                                     </div>
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="country"><strong>Country</strong></label><input class="form-control" type="text" id="country" placeholder="USA" name="country"></div>
+                                                        <div class="mb-3"><label class="form-label"
+                                                                for="country"><strong>Country</strong></label><input
+                                                                class="form-control" type="text" id="country"
+                                                                placeholder="USA" name="country"></div>
                                                     </div>
                                                 </div>
-                                                <div class="mb-3"><button class="btn btn-primary btn-sm" type="submit">Save&nbsp;Settings</button></div>
+                                                <div class="mb-3"><button class="btn btn-primary btn-sm"
+                                                        type="submit">Save&nbsp;Settings</button></div>
                                             </form>
                                         </div>
                                     </div>
@@ -233,8 +313,14 @@
                         </div>
                         <div class="card-body">
                             <ul class="list-group">
-                                <li class="list-group-item"><i class="fa fa-cc-visa"></i><span class="paymentText">Visa / Electron ending in 3970</span><a class="float-end nounderline" href="#">View</a><span class="float-end paymentExpireText">Expires 02/2023</span></li>
-                                <li class="list-group-item"><i class="fa fa-cc-mastercard"></i><span class="paymentText">Mastercard ending in 7334</span><a class="float-end nounderline" href="#">View</a><span class="float-end paymentExpireText">Expires 05/2025</span></li>
+                                <li class="list-group-item"><i class="fa fa-cc-visa"></i><span class="paymentText">Visa
+                                        / Electron ending in 3970</span><a class="float-end nounderline"
+                                        href="#">View</a><span class="float-end paymentExpireText">Expires
+                                        02/2023</span></li>
+                                <li class="list-group-item"><i class="fa fa-cc-mastercard"></i><span
+                                        class="paymentText">Mastercard ending in 7334</span><a
+                                        class="float-end nounderline" href="#">View</a><span
+                                        class="float-end paymentExpireText">Expires 05/2025</span></li>
                             </ul>
                         </div>
                     </div>
@@ -247,7 +333,8 @@
             </footer>
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
 </body>

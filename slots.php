@@ -2,7 +2,9 @@
 
 <?php
 session_start();
-
+if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
+    header('location: login.html');
+}
 # Verbindung zur Datenbank aufbauen
 require ("inc.php");
 $con = mysqli_connect($host, $user, $passwd, $datenbank)
