@@ -1,4 +1,5 @@
 <?php 
+session_start();
 if(!isset($_GET["id"])){
     header("Location: table.html");
     die();
@@ -41,7 +42,7 @@ if(mysqli_connect_errno()){
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i
                                 class="fas fa-user"></i><span>Profile</span></a></li>
                     <?php 
-                    $sql = "SELECT Admin FROM User WHERE UserID = ". "1";//$_SESSION['user-id'];
+                    $sql = "SELECT Admin FROM User WHERE UserID = ".$_SESSION['user-id'];
                     $res = $conn->query($sql);
                     if($res->num_rows > 0){
                         if($res->fetch_assoc()["Admin"] == 1){

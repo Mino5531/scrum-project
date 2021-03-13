@@ -1,4 +1,5 @@
 <?php
+session_start();
 $conn = mysqli_connect("127.0.0.1","swpuser","swpuser","swp");
 if(mysqli_connect_errno()){
     die();
@@ -6,7 +7,8 @@ if(mysqli_connect_errno()){
 $sql = "SELECT Admin FROM User WHERE Admin = 1 AND UserID = ".$_SESSION['user-id'];
 $res = $conn->query($sql);
 if($res->num_rows != 1){
-    die("Permission denied");
+    http_response_code(403);
+    die();
 }
 if(isset($_POST['username']) && isset($_POST['email']) 
     && isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['id'])){

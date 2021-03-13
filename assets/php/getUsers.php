@@ -1,4 +1,5 @@
 <?php 
+session_start();
 $conn = mysqli_connect("127.0.0.1","swpuser","swpuser","swp");
 if(mysqli_connect_errno()){
     die();
