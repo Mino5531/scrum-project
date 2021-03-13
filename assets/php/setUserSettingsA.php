@@ -12,8 +12,13 @@ if(isset($_POST['username']) && isset($_POST['email'])
     && isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['id'])){
         $conn->query("UPDATE User SET Username = '".$_POST['username']."', Email='".$_POST['email']."',
          Vorname='".$_POST['first_name']."', Nachname='".$_POST['last_name']."' WHERE UserID = ".$_POST['id'].";");
-}else{
-    http_response_code(400);
-    die();
 }
+if(isset($_POST['address']) && isset($_POST['city']) && isset($_POST['country']) && isset($_POST['id']) ){
+    $conn->query("UPDATE User SET Addresse = '".$_POST['address']."', Stadt ='".$_POST['city']."' 
+     ,Land=".$_POST['country']." WHERE UserID = ".$_POST['id'].";");
+}else{
+http_response_code(400);
+die();
+}
+echo($conn->error);
 ?>
