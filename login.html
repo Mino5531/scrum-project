@@ -29,7 +29,7 @@
                                     <div class="text-center">
                                         <h4 class="text-dark mb-4">Welcome Back!</h4>
                                     </div>
-                                    <form class="user">
+                                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                                         <div class="mb-3"><input class="form-control form-control-user" type="email" id="email" aria-describedby="emailHelp" placeholder="Enter Email Address..." name="email" autocomplete="off"></div>
                                         <div class="mb-3"><input class="form-control form-control-user" type="password" id="password" placeholder="Password" name="password"></div>
                                         <div class="mb-3">
@@ -39,8 +39,8 @@
                                         </div><button class="btn btn-primary d-block btn-user w-100" type="submit">Login</button>
                                         <hr>
                                     </form>
-                                    <div class="text-center"><a class="small" href="forgot-password.html">Forgot Password?</a></div>
-                                    <div class="text-center"><a class="small" href="register.html">Create an Account!</a></div>
+                                    <div class="text-center"><a class="small" href="forgot-password.php">Forgot Password?</a></div>
+                                    <div class="text-center"><a class="small" href="register.php">Create an Account!</a></div>
                                 </div>
                             </div>
                         </div>
@@ -52,6 +52,42 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
+<?php
+
+$link = mysqli_connect("127.0.0.1", "swpuser", "swpuser", "swp");
+if ($link === false){
+    die("connection failed: " . mysqli_connect_error());
+}
+session_start();
+
+    if($_SERVER["REQUEST_METHOD"] == "POST") {
+        $email = $_POST["email"];
+        $password = $_POST["password"];
+
+        $sql = "SELECT Email, Passwort, UserID from User WHERE Email = '$email' AND Passwort = '$password'";
+        $result = mysqli_query($link, $sql);
+        $row = mysqli_fetch_assoc($result);
+
+        $count = mysqli_num_rows($result);
+        $userid = $row["UserID"];
+
+        if ($count == 1) {
+            $_SESSION["login_user"] = $email;
+            $_SESSION["user-id"] = $userid;
+            header("location: profile.php");
+        }else{
+            $error = "Invalid username or password. Check again";
+        }
+
+        if (!empty($_POST["formCheck-1"])) {
+            setcookie("email", $email, time() + 3600);
+            setcookie("password", $password, time() + 3600);
+        } else {
+            setcookie("email","");
+            setcookie("password","");
+        }
+    }
+?>
 </body>
 
 </html>
