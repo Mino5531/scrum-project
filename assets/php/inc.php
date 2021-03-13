@@ -1,6 +1,6 @@
 <?
 
-$servername = "localhost";
+$servername = "127.0.0.1";
 $username = "swpuser";
 $password = "swpuser";
 $dbname = "swp";

@@ -1,5 +1,5 @@
 <?php 
-$conn = mysqli_connect("localhost","swpuser","swpuser","swp");
+$conn = mysqli_connect("127.0.0.1","swpuser","swpuser","swp");
 if(mysqli_connect_errno()){
     die();
 }
