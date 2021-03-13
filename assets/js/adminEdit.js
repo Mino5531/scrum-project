@@ -15,6 +15,13 @@ var city = document.getElementById('city');
 var country = document.getElementById('country');
 var contact_save = document.getElementById('contact_save');
 
+/**
+ * Danger Zone
+ */
+var delete_account = document.getElementById('account-delete');
+var lock_account = document.getElementById('account-lock');
+var unlock_account = document.getElementById('account-unlock');
+
 var userID = GET['id'];
 
 $.getJSON("assets/php/getCountries.php", function (data) {
@@ -42,6 +49,11 @@ $.getJSON("assets/php/getUsers.php?id=" + userID, function (data) {
     address.value = data[0].Addresse;
     city.value = data[0].Stadt;
     country.selectedIndex = +data[0].Land - 1; //DB IDs start at 1 index starts at 0 thats why
+    if (data[0].Gesperrt === '1') {
+        document.getElementById("lock-warning-dlg").style.display = '';
+        lock_account.style.display = 'none';
+        unlock_account.style.display = '';
+    }
 }).done(function () {
     console.log("second success");
 }).fail(function () {
@@ -67,7 +79,7 @@ save_user.onclick = function () {
         }, 1000);
     });
     //location.reload();
-}
+};
 
 contact_save.onclick = function () {
     const data = {
@@ -82,5 +94,40 @@ contact_save.onclick = function () {
         setTimeout(function () {
             $('#success-dlg').fadeOut('slow');
         }, 1000);
+    });
+};
+
+delete_account.onclick = function () {
+    const data = {
+        del: 1,
+        id: userID
+    }
+    if (confirm('Are you sure you want to delete this account? This can not be undone!')) {
+        $.post('assets/php/setUserSettingsA.php', data, function (data, status) {
+            console.log(`${data} and status is ${status}`);
+            location.href = 'table.html';
+        });
+    }
+}
+
+lock_account.onclick = function () {
+    const data = {
+        lock: 1,
+        id: userID
+    }
+    $.post('assets/php/setUserSettingsA.php', data, function (data, status) {
+        console.log(`${data} and status is ${status}`);
+        location.reload();
+    });
+}
+
+unlock_account.onclick = function () {
+    const data = {
+        lock: 0,
+        id: userID
+    }
+    $.post('assets/php/setUserSettingsA.php', data, function (data, status) {
+        console.log(`${data} and status is ${status}`);
+        location.reload();
     });
 }

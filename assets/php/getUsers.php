@@ -10,7 +10,7 @@ if($res->num_rows != 1){
     die();
 }
 if(isset($_GET['id'])){
-    $res= $conn->query("SELECT Vorname,Nachname,Username,Email,Addresse,Stadt,Land FROM User WHERE Admin = '0' AND UserID = ".$_GET['id'].";");
+    $res= $conn->query("SELECT Vorname,Nachname,Username,Email,Addresse,Stadt,Land,Gesperrt FROM User WHERE Admin = '0' AND UserID = ".$_GET['id'].";");
 }else{
     $res= $conn->query("SELECT UserID,Vorname,Nachname,Username,Email,Kontostand FROM User WHERE Admin = '0';");
 }

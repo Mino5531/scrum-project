@@ -168,6 +168,9 @@ if(mysqli_connect_errno()){
                     <div class="success" id=success-dlg style="display: none;">
                         <strong>Success!</strong> Changes were successful
                     </div>
+                    <div class="warning" id=lock-warning-dlg style="display: none;">
+                        <strong>Warning!</strong> This account is currently locked
+                    </div>
                     <h3 class="text-dark mb-1">
                         <?php 
                         echo("Editing User ID: #".$_GET["id"] ); ?>
@@ -179,6 +182,26 @@ if(mysqli_connect_errno()){
                                         src="assets/img/dogs/image2.jpeg" width="160" height="160">
                                     <div class="mb-3"><button class="btn btn-primary btn-sm" type="button">Change
                                             Picture</button></div>
+                                </div>
+                            </div>
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="text-primary fw-bold m-0">Danger Zone</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <button type="button" class="btn btn-danger" id="account-delete"
+                                            style="margin-bottom: 10px; margin-top: 15px;">Delete this
+                                            account</button>
+                                    </div>
+                                    <div class="row">
+                                        <button type="button" class="btn btn-warning" id="account-lock"
+                                            style="margin-top: 10px; margin-bottom: 15px;">Lock this
+                                            account</button>
+                                        <button type="button" class="btn btn-warning" id="account-unlock"
+                                            style="margin-top: 10px; margin-bottom: 15px;display: none;">Unlock this
+                                            account</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -15,6 +15,17 @@
     border-radius:.35rem
 }
 
+.warning{
+    padding: 20px;
+    background-color: #ff9800;
+    color: white;
+    position:relative;
+    padding:1rem 1rem;
+    margin-bottom:1rem;
+    border:1px solid transparent;
+    border-radius:.35rem
+}
+
 .closebtn {
   margin-left: 15px;
   color: white;

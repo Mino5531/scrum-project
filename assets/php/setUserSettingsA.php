@@ -13,12 +13,22 @@ if(isset($_POST['username']) && isset($_POST['email'])
         $conn->query("UPDATE User SET Username = '".$_POST['username']."', Email='".$_POST['email']."',
          Vorname='".$_POST['first_name']."', Nachname='".$_POST['last_name']."' WHERE UserID = ".$_POST['id'].";");
 }
-if(isset($_POST['address']) && isset($_POST['city']) && isset($_POST['country']) && isset($_POST['id']) ){
+else{
+    if(isset($_POST['address']) && isset($_POST['city']) && isset($_POST['country']) && isset($_POST['id']) ){
     $conn->query("UPDATE User SET Addresse = '".$_POST['address']."', Stadt ='".$_POST['city']."' 
      ,Land=".$_POST['country']." WHERE UserID = ".$_POST['id'].";");
-}else{
-http_response_code(400);
-die();
+    }else{
+        if(isset($_POST['del']) && isset($_POST['id'])){
+            $conn->query("DELETE FROM User WHERE UserID = ".$_POST['id']);
+        }else{
+            if(isset($_POST['lock']) && isset($_POST['id'])){
+                $conn->query("UPDATE User SET Gesperrt = ".$_POST['lock']." WHERE UserID = ".$_POST['id']);
+            }else{
+                http_response_code(400);
+                die();
+            }
+        }
+    }
 }
 echo($conn->error);
 ?>
