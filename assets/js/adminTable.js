@@ -1,15 +1,30 @@
 var tableInfo = document.getElementById('dataTable_info');
 var paginator = document.getElementById('paginator')
 var tableSelect = document.getElementById('dataTable_select');
+var tbody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+var countries;
+
 var page;
 page = GET["page"];
 if (page == undefined) {
    page = 0;
-}
+};
+
 tableSelect.onchange = function () {
    getJson(tableSelect.value, page);
 };
-var tbody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+
+$.getJSON("assets/php/getCountries.php", function (data) {
+   countries = data;
+}).done(function () {
+   console.log("second success");
+}).fail(function () {
+   console.log("getting json failed");
+   alert("JSON Error: could not load country data");
+}).always(function () {
+   console.log("complete");
+})
+
 function getJson(count, page) {
    $.getJSON("assets/php/getUsers.php", function (data) {
       tbody.innerHTML = '';
@@ -43,7 +58,11 @@ function getJson(count, page) {
          text.push(document.createTextNode(data[i].Email));
          text.push(document.createTextNode(data[i].Vorname));
          text.push(document.createTextNode(data[i].Nachname));
-         text.push(document.createTextNode('Germany'));
+         if (data[i].Land != undefined) {
+            text.push(document.createTextNode(countries[+data[i].Land - 1].nicename));
+         } else {
+            text.push(document.createTextNode('Undefined'));
+         }
          text.push(document.createTextNode(data[i].Kontostand + '$'));
          text.push(editButton);
          for (var j = 0; j < 7; j++) {

@@ -12,7 +12,7 @@ if($res->num_rows != 1){
 if(isset($_GET['id'])){
     $res= $conn->query("SELECT Vorname,Nachname,Username,Email,Addresse,Stadt,Land,Gesperrt FROM User WHERE Admin = '0' AND UserID = ".$_GET['id'].";");
 }else{
-    $res= $conn->query("SELECT UserID,Vorname,Nachname,Username,Email,Kontostand FROM User WHERE Admin = '0';");
+    $res= $conn->query("SELECT UserID,Vorname,Nachname,Username,Email,Kontostand,Land FROM User WHERE Admin = '0';");
 }
 $rows = array();
 while ($r = mysqli_fetch_assoc($res)){
