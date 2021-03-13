@@ -53,9 +53,17 @@ require ("inc.php");
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-gamepad"></i><span>Games</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i class="fas fa-user"></i><span>Profile</span></a></li>
-                    <li class="nav-item"></li>
-                    <li class="nav-item"></li>
-                    <li class="nav-item"></li>
+                    <?php 
+                    $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
+                    $res = $conn->query($sql);
+                    if($res->num_rows > 0){
+                        if($res->fetch_assoc()["Admin"] == 1){
+                            echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
+                        }
+                    }else{
+                        die("Invalid or no userID");
+                    }
+                    ?>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>

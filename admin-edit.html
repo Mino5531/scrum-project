@@ -1,12 +1,19 @@
 <?php 
 session_start();
-if(!isset($_GET["id"])){
-    header("Location: table.html");
-    die();
-}
 $conn = mysqli_connect("127.0.0.1","swpuser","swpuser","swp");
 if(mysqli_connect_errno()){
     die("DB Connection-Error please contact the server admin");
+}
+if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
+    header('location: login.html');
+}
+$res = $conn->query("SELECT Admin FROM User WHERE Admin = 1 AND UserID = ". $_SESSION['user-id']);
+if($res->num_rows != 1){
+    header('profile.html');
+}
+if(!isset($_GET["id"])){
+    header("Location: table.html");
+    die();
 }
 ?>
 <!DOCTYPE html>

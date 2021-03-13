@@ -23,6 +23,7 @@ $.getJSON("assets/php/getCountries.php", function (data) {
    alert("JSON Error: could not load country data");
 }).always(function () {
    console.log("complete");
+   getJson(tableSelect.value, page);
 })
 
 function getJson(count, page) {
@@ -99,4 +100,3 @@ function editUser(id) {
    console.log(id);
    window.location = "admin-edit.html?id=" + id;
 }
-getJson(tableSelect.value, page);

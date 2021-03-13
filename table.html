@@ -1,10 +1,13 @@
-<!DOCTYPE html>
 <?php 
+session_start();
+if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
+    header('location: login.html');}
 $conn = mysqli_connect("127.0.0.1","swpuser","swpuser","swp");
 if(mysqli_connect_errno()){
     die("DB Connection-Error please contact the server admin");
 }
 ?>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -36,7 +39,7 @@ if(mysqli_connect_errno()){
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i
                                 class="fas fa-user"></i><span>Profile</span></a></li>
                     <?php 
-                    $sql = "SELECT Admin FROM User WHERE UserID = ". "1";//$_SESSION['user-id'];
+                    $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
                     $res = $conn->query($sql);
                     if($res->num_rows > 0){
                         if($res->fetch_assoc()["Admin"] == 1){
@@ -175,7 +178,8 @@ if(mysqli_connect_errno()){
                                                 <option value="25">25</option>
                                                 <option value="50">50</option>
                                                 <option value="100">100</option>
-                                            </select>&nbsp;</label></div>
+                                            </select>&nbsp;</label>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="text-md-end dataTables_filter" id="dataTable_filter"><label
