@@ -12,7 +12,7 @@ if ($link === false){
         $email = $_POST["email"];
         $password = $_POST["password"];
 
-        $sql = "SELECT Email, Passwort, UserID, Username from User WHERE Email = '$email' AND Passwort = '$password'";
+        $sql = "SELECT Email, Passwort, UserID, Username from User WHERE Email = '$email' AND Passwort = '$password' AND Gesperrt = 0";
         $result = mysqli_query($link, $sql);
         $row = mysqli_fetch_assoc($result);
 
