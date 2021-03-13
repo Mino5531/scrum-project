@@ -6,7 +6,6 @@ page = GET["page"];
 if (page == undefined) {
    page = 0;
 }
-console.log(page);
 tableSelect.onchange = function () {
    getJson(tableSelect.value, page);
 };
@@ -37,12 +36,7 @@ function getJson(count, page) {
          var editButton = document.createElement("button");
          editButton.id = data[i].UserID;
          editButton.onclick = function () { editUser(this.id) };
-         editButton.classList.add("float-right");
-         editButton.classList.add("btn");
-         editButton.classList.add("btn-primary");
-         editButton.classList.add("btn-sm");
-         editButton.classList.add("fas");
-         editButton.classList.add("fa-user-edit");
+         editButton.classList.add("float-right", "btn", "btn-primary", "btn-sm", "fas", "fa-user-edit");
          //Text
          var text = [];
          text.push(document.createTextNode(data[i].Username));
