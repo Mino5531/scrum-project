@@ -372,6 +372,7 @@ CREATE TABLE IF NOT EXISTS `User` (
   `Addresse` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `Stadt` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `Land` int(11) DEFAULT NULL,
+  `Gesperrt` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`UserID`),
   KEY `country` (`Land`),
   CONSTRAINT `country` FOREIGN KEY (`Land`) REFERENCES `Country` (`id`)
@@ -379,20 +380,18 @@ CREATE TABLE IF NOT EXISTS `User` (
 
 -- Dumping data for table swp.User: ~13 rows (approximately)
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` (`UserID`, `Vorname`, `Nachname`, `Username`, `Kontostand`, `Admin`, `Email`, `Passwort`, `Addresse`, `Stadt`, `Land`) VALUES
-	(1, 'safa', 'asdgasdg', 'REAF', 0, 1, 'sdfgsdfg', '1234', NULL, NULL, NULL),
-	(2, 'Max', 'Mustermann', 'AGER', 0, 0, 'test@test.com', '4567', NULL, NULL, NULL),
-	(3, 'Marie', 'Musterfrau', 'Maranne', 0, 0, 'test@test.com', '9345687', 'Beskidensrasse 1', 'Berlin', 80),
-	(4, 'huilsdfg', 'ysertuiop', 'GYHJK', 0, 0, 'shsdfgh', '9345687', NULL, NULL, NULL),
-	(5, 'huilsdfg', 'ysertuiop', 'GYHJK', 0, 0, 'shsdfgh', '9345687', NULL, NULL, NULL),
-	(6, 'asdfasf', 'qagerg', 'AGER', 0, 0, 'drghjkhjk', '4567', NULL, NULL, NULL),
-	(7, 'asdfasf', 'qagerg', 'AGER', 0, 0, 'drghjkhjk', '4567', NULL, NULL, NULL),
-	(8, 'huilsdfg', 'ysertuiop', 'GYHJK', 0, 0, 'shsdfgh', '9345687', NULL, NULL, NULL),
-	(9, 'asdfasf', 'qagerg', 'AGER', 0, 0, 'drghjkhjk', '4567', NULL, NULL, NULL),
-	(10, 'huilsdfg', 'ysertuiop', 'GYHJK', 0, 0, 'shsdfgh', '9345687', NULL, NULL, NULL),
-	(11, 'asdfasf', 'qagerg', 'AGER', 0, 0, 'drghjkhjk', '4567', NULL, NULL, NULL),
-	(12, 'asdfasf', 'qagerg', 'AGER', 0, 0, 'drghjkhjk', '4567', NULL, NULL, NULL),
-	(13, 'asdfasf', 'qagerg', 'AGER', 0, 0, 'drghjkhjk', '4567', NULL, NULL, NULL);
+INSERT INTO `User` (`UserID`, `Vorname`, `Nachname`, `Username`, `Kontostand`, `Admin`, `Email`, `Passwort`, `Addresse`, `Stadt`, `Land`, `Gesperrt`) VALUES
+	(1, 'safa', 'asdgasdg', 'REAF', 0, 1, 'sdfgsdfg', '1234', NULL, NULL, NULL, 0),
+	(2, 'Max', 'Mustermann', 'AGER', 0, 0, 'test@gmail.com', '4567', 'Beskidenstrasse 2', 'Berlin', 80, 0),
+	(3, 'Marie', 'Musterfrau', 'Maranne', 0, 0, 'test@test.com', '9345687', 'Beskidensrasse 1', 'Berlin', 80, 0),
+	(5, 'huilsdfg', 'ysertuiop', 'GYHJK', 0, 0, 'shsdfgh', '9345687', NULL, NULL, NULL, 0),
+	(6, 'asdfasf', 'qagerg', 'AGER', 0, 0, 'drghjkhjk', '4567', NULL, NULL, NULL, 0),
+	(7, 'asdfasf', 'qagerg', 'AGER', 0, 0, 'drghjkhjk', '4567', NULL, NULL, NULL, 0),
+	(8, 'huilsdfg', 'ysertuiop', 'GYHJK', 0, 0, 'shsdfgh', '9345687', NULL, NULL, NULL, 0),
+	(9, 'asdfasf', 'qagerg', 'AGER', 0, 0, 'drghjkhjk', '4567', NULL, NULL, NULL, 0),
+	(10, 'huilsdfg', 'ysertuiop', 'GYHJK', 0, 0, 'shsdfgh', '9345687', NULL, NULL, NULL, 0),
+	(11, 'asdfasf', 'qagerg', 'AGER', 0, 0, 'drghjkhjk', '4567', NULL, NULL, NULL, 0),
+	(12, 'asdfasf', 'qagerg', 'AGER', 0, 0, 'drghjkhjk', '4567', NULL, NULL, NULL, 0);
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
