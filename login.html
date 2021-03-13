@@ -1,3 +1,43 @@
+<?php
+session_start();
+if(isset($_SESSION['login_user']) && isset($_SESSION['user-id'])){
+    header('location: profile.html');
+}
+$link = mysqli_connect("127.0.0.1", "swpuser", "swpuser", "swp");
+if ($link === false){
+    die("connection failed: " . mysqli_connect_error());
+}
+
+    if($_SERVER["REQUEST_METHOD"] == "POST") {
+        $email = $_POST["email"];
+        $password = $_POST["password"];
+
+        $sql = "SELECT Email, Passwort, UserID, Username from User WHERE Email = '$email' AND Passwort = '$password' AND Gesperrt = 0";
+        $result = mysqli_query($link, $sql);
+        $row = mysqli_fetch_assoc($result);
+
+        $count = mysqli_num_rows($result);
+        $userid = $row["UserID"];
+        $username = $row['Username'];
+
+        if ($count == 1) {
+            $_SESSION["login_user"] = $email;
+            $_SESSION["user-id"] = $userid;
+            $_SESSION['username'] = $username;
+            header("location: profile.html");
+        }else{
+            $error = "Invalid username or password. Check again";
+        }
+
+        if (!empty($_POST["formCheck-1"])) {
+            setcookie("email", $email, time() + 3600);
+            setcookie("password", $password, time() + 3600);
+        } else {
+            setcookie("email","");
+            setcookie("password","");
+        }
+    }
+?>
 <!DOCTYPE html>
 <html>
 
@@ -6,15 +46,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Login - Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
     <link rel="stylesheet" href="assets/css/profile.css">
     <link rel="stylesheet" href="assets/css/untitled.css">
+    <link rel="stylesheet" href="assets/css/message.css">
 </head>
 
 <body class="bg-gradient-primary">
+    <div class="alert" style="display: <?php if(!isset($error)){echo('none');} ?>;">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <strong>Error!</strong> Wrong email or password.
+    </div>
     <div class="container" style="margin-top: 60px;">
         <div class="row justify-content-center">
             <div class="col-md-9 col-lg-12 col-xl-10">
@@ -22,25 +68,38 @@
                     <div class="card-body p-0">
                         <div class="row">
                             <div class="col-lg-6 d-none d-lg-flex">
-                                <div class="flex-grow-1 bg-login-image" style="background-image: url(&quot;assets/img/placeholder/placeholder-3x4.png&quot;);"></div>
+                                <div class="flex-grow-1 bg-login-image"
+                                    style="background-image: url(&quot;assets/img/placeholder/placeholder-3x4.png&quot;);">
+                                </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
                                         <h4 class="text-dark mb-4">Welcome Back!</h4>
                                     </div>
-                                    <form class="user">
-                                        <div class="mb-3"><input class="form-control form-control-user" type="email" id="email" aria-describedby="emailHelp" placeholder="Enter Email Address..." name="email" autocomplete="off"></div>
-                                        <div class="mb-3"><input class="form-control form-control-user" type="password" id="password" placeholder="Password" name="password"></div>
+                                    <form action="<?php echo htmlspecialchars($_SERVER[" PHP_SELF"]); ?>" method="POST">
+                                        <div class="mb-3"><input class="form-control form-control-user" type="email"
+                                                id="email" aria-describedby="emailHelp"
+                                                placeholder="Enter Email Address..." name="email" autocomplete="off">
+                                        </div>
+                                        <div class="mb-3"><input class="form-control form-control-user" type="password"
+                                                id="password" placeholder="Password" name="password"></div>
                                         <div class="mb-3">
                                             <div class="custom-control custom-checkbox small">
-                                                <div class="form-check"><input class="form-check-input custom-control-input" type="checkbox" id="formCheck-1"><label class="form-check-label custom-control-label" for="formCheck-1">Remember Me</label></div>
+                                                <div class="form-check"><input
+                                                        class="form-check-input custom-control-input" type="checkbox"
+                                                        id="formCheck-1"><label
+                                                        class="form-check-label custom-control-label"
+                                                        for="formCheck-1">Remember Me</label></div>
                                             </div>
-                                        </div><button class="btn btn-primary d-block btn-user w-100" type="submit">Login</button>
+                                        </div><button class="btn btn-primary d-block btn-user w-100"
+                                            type="submit">Login</button>
                                         <hr>
                                     </form>
-                                    <div class="text-center"><a class="small" href="forgot-password.html">Forgot Password?</a></div>
-                                    <div class="text-center"><a class="small" href="register.html">Create an Account!</a></div>
+                                    <div class="text-center"><a class="small" href="forgot-password.html">Forgot
+                                            Password?</a></div>
+                                    <div class="text-center"><a class="small" href="register.html">Create an
+                                            Account!</a></div>
                                 </div>
                             </div>
                         </div>
@@ -49,7 +108,8 @@
             </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
 </body>

@@ -12,7 +12,7 @@
 	$email = $_POST["email"];
 	$passwort = $_POST["passwort"];
 	
-	$SESSION_userID = $_SESSION['userID'];
+	$SESSION_userID = $_SESSION['user-id'];
 	#$SESSION_userID = 1;
 	
 	#Überprüfen auf Bedarf der Aktualisierung

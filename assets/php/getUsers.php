@@ -1,9 +1,10 @@
 <?php 
+session_start();
 $conn = mysqli_connect("127.0.0.1","swpuser","swpuser","swp");
 if(mysqli_connect_errno()){
     die();
 }
-$sql = "SELECT Admin FROM User WHERE UserID = ". "1";//$_SESSION['user-id'];
+$sql = "SELECT Admin FROM User WHERE Admin = 1 AND UserID = ".$_SESSION['user-id'];
 $res = $conn->query($sql);
 if($res->num_rows != 1){
     http_response_code(403);
