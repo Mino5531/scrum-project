@@ -23,6 +23,7 @@ if(mysqli_connect_errno()){
     <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
     <link rel="stylesheet" href="assets/css/profile.css">
     <link rel="stylesheet" href="assets/css/untitled.css">
+    <link rel="stylesheet" href="assets/css/message.css">
 </head>
 
 <body id="page-top">
@@ -164,6 +165,9 @@ if(mysqli_connect_errno()){
                     </div>
                 </nav>
                 <div class="container-fluid">
+                    <div class="success" id=success-dlg style="display: none;">
+                        <strong>Success!</strong> Changes were successful
+                    </div>
                     <h3 class="text-dark mb-1">
                         <?php 
                         echo("Editing User ID: #".$_GET["id"] ); ?>
@@ -218,40 +222,39 @@ if(mysqli_connect_errno()){
                                             <p class="text-primary m-0 fw-bold">User Settings</p>
                                         </div>
                                         <div class="card-body">
-                                            <form>
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <div class="mb-3"><label class="form-label"
-                                                                for="username"><strong>Username</strong></label><input
-                                                                class="form-control" type="text" id="username"
-                                                                placeholder="user.name" name="username"></div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="mb-3"><label class="form-label"
-                                                                for="email"><strong>Email Address</strong></label><input
-                                                                class="form-control" type="email" id="email"
-                                                                placeholder="user@example.com" name="email"></div>
-                                                    </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="mb-3"><label class="form-label"
+                                                            for="username"><strong>Username</strong></label><input
+                                                            class="form-control" type="text" id="username"
+                                                            placeholder="user.name" name="username"></div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <div class="mb-3"><label class="form-label"
-                                                                for="first_name"><strong>First
-                                                                    Name</strong></label><input class="form-control"
-                                                                type="text" id="first_name" placeholder="John"
-                                                                name="first_name"></div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="mb-3"><label class="form-label"
-                                                                for="last_name"><strong>Last Name</strong></label><input
-                                                                class="form-control" type="text" id="last_name"
-                                                                placeholder="Doe" name="last_name"></div>
-                                                    </div>
+                                                <div class="col">
+                                                    <div class="mb-3"><label class="form-label"
+                                                            for="email"><strong>Email Address</strong></label><input
+                                                            class="form-control" type="email" id="email"
+                                                            placeholder="user@example.com" name="email"></div>
                                                 </div>
-                                                <div class="mb-3">
-                                                    <button class="btn btn-primary btn-sm">Save Settings</button>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="mb-3"><label class="form-label"
+                                                            for="first_name"><strong>First
+                                                                Name</strong></label><input class="form-control"
+                                                            type="text" id="first_name" placeholder="John"
+                                                            name="first_name"></div>
                                                 </div>
-                                            </form>
+                                                <div class="col">
+                                                    <div class="mb-3"><label class="form-label"
+                                                            for="last_name"><strong>Last Name</strong></label><input
+                                                            class="form-control" type="text" id="last_name"
+                                                            placeholder="Doe" name="last_name"></div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <button class="btn btn-primary btn-sm" id="user_save">Save
+                                                    Settings</button>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="card shadow">
@@ -259,28 +262,26 @@ if(mysqli_connect_errno()){
                                             <p class="text-primary m-0 fw-bold">Contact Settings</p>
                                         </div>
                                         <div class="card-body">
-                                            <form>
-                                                <div class="mb-3"><label class="form-label"
-                                                        for="address"><strong>Address</strong></label><input
-                                                        class="form-control" type="text" id="address"
-                                                        placeholder="Sunset Blvd, 38" name="address"></div>
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <div class="mb-3"><label class="form-label"
-                                                                for="city"><strong>City</strong></label><input
-                                                                class="form-control" type="text" id="city"
-                                                                placeholder="Los Angeles" name="city"></div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="mb-3"><label class="form-label"
-                                                                for="country"><strong>Country</strong></label><input
-                                                                class="form-control" type="text" id="country"
-                                                                placeholder="USA" name="country"></div>
-                                                    </div>
+                                            <div class="mb-3"><label class="form-label"
+                                                    for="address"><strong>Address</strong></label><input
+                                                    class="form-control" type="text" id="address"
+                                                    placeholder="Sunset Blvd, 38" name="address"></div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="mb-3"><label class="form-label"
+                                                            for="city"><strong>City</strong></label><input
+                                                            class="form-control" type="text" id="city"
+                                                            placeholder="Los Angeles" name="city"></div>
                                                 </div>
-                                                <div class="mb-3"><button class="btn btn-primary btn-sm"
-                                                        type="submit">Save&nbsp;Settings</button></div>
-                                            </form>
+                                                <div class="col">
+                                                    <div class="mb-3"><label class="form-label"
+                                                            for="country"><strong>Country</strong></label><input
+                                                            class="form-control" type="text" id="country"
+                                                            placeholder="USA" name="country"></div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3"><button id="contact_save"
+                                                    class="btn btn-primary btn-sm">Save&nbsp;Settings</button></div>
                                         </div>
                                     </div>
                                 </div>
@@ -298,9 +299,11 @@ if(mysqli_connect_errno()){
     </div>
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/get.js"></script>
+    <script src="assets/js/adminEdit.js"></script>
 </body>
 
 </html>
