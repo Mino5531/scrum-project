@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `Country` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=240 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table swp.Country: ~239 rows (approximately)
+-- Dumping data for table swp.Country: ~18 rows (approximately)
 /*!40000 ALTER TABLE `Country` DISABLE KEYS */;
 INSERT INTO `Country` (`id`, `iso`, `name`, `nicename`, `iso3`) VALUES
 	(1, 'AF', 'AFGHANISTAN', 'Afghanistan', 'AFG'),
@@ -349,6 +349,7 @@ CREATE TABLE IF NOT EXISTS `PaymentMethod` (
   `CVV` int(11) NOT NULL,
   `Rechnungsadresse` varchar(45) COLLATE utf8_bin NOT NULL,
   `Rechnungsname` varchar(45) COLLATE utf8_bin NOT NULL,
+  `Hinzufügedatum` date NOT NULL DEFAULT current_timestamp(),
   `UserID` int(11) NOT NULL,
   PRIMARY KEY (`KartenId`),
   KEY `UserID` (`UserID`),
@@ -376,12 +377,12 @@ CREATE TABLE IF NOT EXISTS `User` (
   PRIMARY KEY (`UserID`),
   KEY `country` (`Land`),
   CONSTRAINT `country` FOREIGN KEY (`Land`) REFERENCES `Country` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- Dumping data for table swp.User: ~13 rows (approximately)
+-- Dumping data for table swp.User: ~0 rows (approximately)
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
 INSERT INTO `User` (`UserID`, `Vorname`, `Nachname`, `Username`, `Kontostand`, `Admin`, `Email`, `Passwort`, `Addresse`, `Stadt`, `Land`, `Gesperrt`) VALUES
-	(1, 'safa', 'asdgasdg', 'REAF', 0, 1, 'sdfgsdfg', '1234', NULL, NULL, NULL, 0),
+	(1, 'safa', 'asdgasdg', 'Runda', 0, 1, 'tera@gmail.com', '1234', NULL, NULL, NULL, 0),
 	(2, 'Max', 'Mustermann', 'AGER', 0, 0, 'test@gmail.com', '4567', 'Beskidenstrasse 2', 'Berlin', 80, 0),
 	(3, 'Marie', 'Musterfrau', 'Maranne', 0, 0, 'test@test.com', '9345687', 'Beskidensrasse 1', 'Berlin', 80, 0),
 	(5, 'huilsdfg', 'ysertuiop', 'GYHJK', 0, 0, 'shsdfgh', '9345687', NULL, NULL, NULL, 0),
@@ -391,7 +392,8 @@ INSERT INTO `User` (`UserID`, `Vorname`, `Nachname`, `Username`, `Kontostand`, `
 	(9, 'asdfasf', 'qagerg', 'AGER', 0, 0, 'drghjkhjk', '4567', NULL, NULL, NULL, 0),
 	(10, 'huilsdfg', 'ysertuiop', 'GYHJK', 0, 0, 'shsdfgh', '9345687', NULL, NULL, NULL, 0),
 	(11, 'asdfasf', 'qagerg', 'AGER', 0, 0, 'drghjkhjk', '4567', NULL, NULL, NULL, 0),
-	(12, 'asdfasf', 'qagerg', 'AGER', 0, 0, 'drghjkhjk', '4567', NULL, NULL, NULL, 0);
+	(12, 'asdfasf', 'qagerg', 'AGER', 0, 0, 'drghjkhjk', '4567', NULL, NULL, NULL, 0),
+	(14, 'Deniz', 'Kaplan', 'denizk', 500, 1, 'denizkaplan@web.de', '1234pass', 'Coole StraÃŸe', 'Berlin', 80, 0);
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
