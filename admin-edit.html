@@ -1,10 +1,19 @@
 <?php 
 session_start();
-if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
-    header('location: login.html');}
 $conn = mysqli_connect("127.0.0.1","swpuser","swpuser","swp");
 if(mysqli_connect_errno()){
     die("DB Connection-Error please contact the server admin");
+}
+if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
+    header('location: login.html');
+}
+$res = $conn->query("SELECT Admin FROM User WHERE Admin = 1 AND UserID = ". $_SESSION['user-id']);
+if($res->num_rows != 1){
+    header('profile.html');
+}
+if(!isset($_GET["id"])){
+    header("Location: table.html");
+    die();
 }
 ?>
 <!DOCTYPE html>
@@ -13,7 +22,7 @@ if(mysqli_connect_errno()){
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Table - Sloterino</title>
+    <title>Edit User - Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
@@ -22,6 +31,7 @@ if(mysqli_connect_errno()){
     <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
     <link rel="stylesheet" href="assets/css/profile.css">
     <link rel="stylesheet" href="assets/css/untitled.css">
+    <link rel="stylesheet" href="assets/css/message.css">
 </head>
 
 <body id="page-top">
@@ -39,7 +49,7 @@ if(mysqli_connect_errno()){
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i
                                 class="fas fa-user"></i><span>Profile</span></a></li>
                     <?php 
-                    $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
+                    $sql = "SELECT Admin FROM User WHERE UserID = ".$_SESSION['user-id'];
                     $res = $conn->query($sql);
                     if($res->num_rows > 0){
                         if($res->fetch_assoc()["Admin"] == 1){
@@ -163,82 +173,150 @@ if(mysqli_connect_errno()){
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-4">Users</h3>
-                    <div class="card shadow">
-                        <div class="card-header py-3">
-                            <p class="text-primary m-0 fw-bold">User Info</p>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 text-nowrap">
-                                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                                        <label class="form-label">Show&nbsp;<select id="dataTable_select"
-                                                class="d-inline-block form-select form-select-sm">
-                                                <option value="10" selected="">10</option>
-                                                <option value="25">25</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                            </select>&nbsp;</label>
+                    <div class="success" id=success-dlg style="display: none;">
+                        <strong>Success!</strong> Changes were successful
+                    </div>
+                    <div class="warning" id=lock-warning-dlg style="display: none;">
+                        <strong>Warning!</strong> This account is currently locked
+                    </div>
+                    <h3 class="text-dark mb-1">
+                        <?php 
+                        echo("Editing User ID: #".$_GET["id"] ); ?>
+                    </h3>
+                    <div class="row mb-3">
+                        <div class="col-lg-4">
+                            <div class="card mb-3">
+                                <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4"
+                                        src="assets/img/dogs/image2.jpeg" width="160" height="160">
+                                    <div class="mb-3"><button class="btn btn-primary btn-sm" type="button">Change
+                                            Picture</button></div>
+                                </div>
+                            </div>
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="text-primary fw-bold m-0">Danger Zone</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <button type="button" class="btn btn-danger" id="account-delete"
+                                            style="margin-bottom: 10px; margin-top: 15px;">Delete this
+                                            account</button>
+                                    </div>
+                                    <div class="row">
+                                        <button type="button" class="btn btn-warning" id="account-lock"
+                                            style="margin-top: 10px; margin-bottom: 15px;">Lock this
+                                            account</button>
+                                        <button type="button" class="btn btn-warning" id="account-unlock"
+                                            style="margin-top: 10px; margin-bottom: 15px;display: none;">Unlock this
+                                            account</button>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="text-md-end dataTables_filter" id="dataTable_filter"><label
-                                            class="form-label"><input type="search" class="form-control form-control-sm"
-                                                aria-controls="dataTable" placeholder="Search"></label></div>
-                                </div>
                             </div>
-                            <div class="table-responsive table mt-2" id="dataTable" role="grid"
-                                aria-describedby="dataTable_info">
-                                <table class="table my-0" id="dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Country</th>
-                                            <th>Balance</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!--<tr>
-                                            <td><img class="rounded-circle me-2" width="30" height="30" src="assets/img/avatars/avatar1.jpeg">Airi Satou</td>
-                                            <td>Accountant</td>
-                                            <td>Tokyo</td>
-                                            <td>33</td>
-                                            <td>2008/11/28</td>
-                                            <td>$162,700</td>
-                                        </tr>-->
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td><strong>Username</strong></td>
-                                            <td><strong>Email</strong></td>
-                                            <td><strong>First Name</strong></td>
-                                            <td><strong>Last Name</strong></td>
-                                            <td><strong>Country</strong></td>
-                                            <td><strong>Balance</strong></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="row mb-3 d-none">
+                                <div class="col">
+                                    <div class="card textwhite bg-primary text-white shadow">
+                                        <div class="card-body">
+                                            <div class="row mb-2">
+                                                <div class="col">
+                                                    <p class="m-0">Peformance</p>
+                                                    <p class="m-0"><strong>65.2%</strong></p>
+                                                </div>
+                                                <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
+                                            </div>
+                                            <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5%
+                                                since last month</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card textwhite bg-success text-white shadow">
+                                        <div class="card-body">
+                                            <div class="row mb-2">
+                                                <div class="col">
+                                                    <p class="m-0">Peformance</p>
+                                                    <p class="m-0"><strong>65.2%</strong></p>
+                                                </div>
+                                                <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
+                                            </div>
+                                            <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5%
+                                                since last month</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6 align-self-center">
-                                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">
-                                        Showing 1 to 10 of 27</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <nav
-                                        class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                                        <ul class="pagination" id="paginator">
-                                            <!--<li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>-->
-                                            <!--<li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">3</a></li>-->
-                                            <!--<li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>-->
-                                        </ul>
-                                    </nav>
+                                <div class="col">
+                                    <div class="card shadow mb-3">
+                                        <div class="card-header py-3">
+                                            <p class="text-primary m-0 fw-bold">User Settings</p>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="mb-3"><label class="form-label"
+                                                            for="username"><strong>Username</strong></label><input
+                                                            class="form-control" type="text" id="username"
+                                                            placeholder="user.name" name="username"></div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3"><label class="form-label"
+                                                            for="email"><strong>Email Address</strong></label><input
+                                                            class="form-control" type="email" id="email"
+                                                            placeholder="user@example.com" name="email"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="mb-3"><label class="form-label"
+                                                            for="first_name"><strong>First
+                                                                Name</strong></label><input class="form-control"
+                                                            type="text" id="first_name" placeholder="John"
+                                                            name="first_name"></div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3"><label class="form-label"
+                                                            for="last_name"><strong>Last Name</strong></label><input
+                                                            class="form-control" type="text" id="last_name"
+                                                            placeholder="Doe" name="last_name"></div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <button class="btn btn-primary btn-sm" id="user_save">Save
+                                                    Settings</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card shadow">
+                                        <div class="card-header py-3">
+                                            <p class="text-primary m-0 fw-bold">Contact Settings</p>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3"><label class="form-label"
+                                                    for="address"><strong>Address</strong></label><input
+                                                    class="form-control" type="text" id="address" placeholder=""
+                                                    name="address"></div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="mb-3"><label class="form-label"
+                                                            for="city"><strong>City</strong></label><input
+                                                            class="form-control" type="text" id="city" placeholder=""
+                                                            name="city"></div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3"><label class="form-label"
+                                                            for="country"><strong>Country</strong></label><select
+                                                            class="form-control" type="text" id="country" placeholder=""
+                                                            name="country">
+
+                                                        </select></div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3"><button id="contact_save"
+                                                    class="btn btn-primary btn-sm">Save&nbsp;Settings</button></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -255,10 +333,10 @@ if(mysqli_connect_errno()){
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="assets/js/get.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
-    <script src="assets/js/adminTable.js"></script>
+    <script src="assets/js/get.js"></script>
+    <script src="assets/js/adminEdit.js"></script>
 </body>
 
 </html>

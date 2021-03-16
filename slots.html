@@ -2,19 +2,15 @@
 session_start();
 if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
     header('location: login.html');
-} 
-$conn = mysqli_connect("127.0.0.1","swpuser","swpuser","swp");
-if(mysqli_connect_errno()){
-    die("DB Connection-Error please contact the server admin");
-}
-?>
+} ?>
+<!--slots.html-->
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Games - Sloterino</title>
+    <title>Slot Game - Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
@@ -35,7 +31,7 @@ if(mysqli_connect_errno()){
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link active" href="index.html"><i
+                    <li class="nav-item"><a class="nav-link" href="index.html"><i
                                 class="fa fa-gamepad"></i><span>Games</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i
                                 class="fas fa-user"></i><span>Profile</span></a></li>
@@ -164,29 +160,31 @@ if(mysqli_connect_errno()){
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-dark mb-0">Games</h3>
-                    </div>
-                    <div class="row">
-                        <ul class="list-group">
-                            <li class="list-group-item"><button class="btn float-end rounded-circle border-0"
-                                    type="button"><i class="fa fa-arrow-right"></i></button><strong
-                                    class="gametitle">Roulette</strong></li>
-                            <li class="list-group-item"><button class="btn float-end rounded-circle border-0"
-                                    type="button"><i class="fa fa-arrow-right"></i></button><strong
-                                    class="gametitle">Lotto</strong></li>
-                            <li class="list-group-item"><button class="btn float-end rounded-circle border-0"
-                                    type="button"><i class="fa fa-arrow-right"></i></button><strong
-                                    class="gametitle">Poker</strong></li>
-                            <li class="list-group-item"><button id="btn-blackjack"
-                                    class="btn float-end rounded-circle border-0" type="button"><i
-                                        class="fa fa-arrow-right"></i></button><strong
-                                    class="gametitle">Blackjack</strong></li>
-                            <li class="list-group-item"><button class="btn float-end rounded-circle border-0"
-                                    type="button"><i class="fa fa-arrow-right"></i></button><strong
-                                    class="gametitle">Slots</strong></li>
-                        </ul>
-                    </div>
+                    <h3 class="text-dark mb-1">Slots</h3>
+
+                    <p> Slots drehen, um zu gewinnen! </p>
+                    <p> Ihr Gewinn ist abh&auml;ngig davon, wie viele gleiche Symbole Sie ziehen </p>
+
+                    </br>
+
+                    <p> 1. Slot </p>
+                    <p> --- </p>
+                    </br>
+
+                    <p> 2. Slot </p>
+                    <p> --- </p>
+                    </br>
+
+                    <p> 3. Slot </p>
+                    <p> --- </p>
+                    </br>
+
+                    </br> </br>
+
+                    <FORM ACTION="slots.php" METHOD=POST>
+                        <input type=submit value="Slots drehen">
+                    </FORM>
+
                 </div>
             </div>
             <footer class="bg-white sticky-footer">
@@ -194,14 +192,12 @@ if(mysqli_connect_errno()){
                     <div class="text-center my-auto copyright"><span>Copyright © Sloterino 2021</span></div>
                 </div>
             </footer>
-        </div>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
-    <script src="assets/js/index.js"></script>
 </body>
 
 </html>
