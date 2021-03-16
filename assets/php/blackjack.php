@@ -180,7 +180,7 @@ function SubtractBalance($value){
 
 	$balance = Balance() - $value;
 
-	$sql = "UPDATE User SET Kontostand = $balance";
+	$sql = "UPDATE User SET Kontostand = $balance WHERE UserID = $userId";
 	if(mysqli_query($conn, $sql)){
 		$sql = "INSERT INTO PaymentHistory SET Datum = (SELECT NOW()), Betrag = -$value, Typ = 'Blackjack', UserID = $userId";
 		mysqli_query($conn, $sql);
@@ -193,7 +193,7 @@ function AddBalance($value){
 
 	$balance = Balance() + $value;
 
-	$sql = "UPDATE User SET Kontostand = $balance";
+	$sql = "UPDATE User SET Kontostand = $balance WHERE UserID = $userId";
 	if (mysqli_query($conn, $sql)){
 		$sql = "INSERT INTO PaymentHistory SET Datum = (SELECT NOW()), Betrag = $value, Typ = 'Blackjack', UserID = $userId";
 		mysqli_query($conn, $sql);
