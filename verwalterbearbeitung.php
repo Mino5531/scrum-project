@@ -1,30 +1,50 @@
 <?php
 	session_start();
-    if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
-        header('location: login.html');
-    }
-#Verbindung mit der Datenbank
-require ("inc.php");
-  $mysqlconnection = mysqli_connect($host,$user,$passwd,$datenbank) or 
-    die("Die Datenbank ist momentan nicht erreichbar! ");
-
-
-	# x wird in diesem Code als hochzählbare Variable für for-Schleifen genutzt
-
-	$Zahl1 = $_POST["zahl1"];
-	$Zahl2 = $_POST["zahl2"];
-	$Zahl3 = $_POST["zahl3"];
-	$Zahl4 = $_POST["zahl4"];
-	$Zahl5 = $_POST["zahl5"];
-	$Zahl6 = $_POST["zahl6"];
 	
-	$getippteZahlen = [$Zahl1, $Zahl2, $Zahl3, $Zahl4, $Zahl5, $Zahl6] ;
-	$alleRichtige = [];
-	$Ende = false;
-	$gewonnenerPreis = 0;
+	require ("inc.php");
+	$mysqlconnection = mysqli_connect($host,$user,$passwd,$datenbank) or 
+    die("Die Datenbank ist momentan nicht erreichbar! ");
+    
+    
+	$vorname = $_POST["vorname"];
+	$nachname = $_POST["nachname"];
+	$username = $_POST["username"];
+	$email = $_POST["email"];
+	$passwort = $_POST["passwort"];
 	
 	$SESSION_userID = $_SESSION['user-id'];
-	//$SESSION_userID = 1;
+	#$SESSION_userID = 1;
+	
+	#Überprüfen auf Bedarf der Aktualisierung
+	if ($_POST["vorname"]!= NULL) 
+	{
+		$qvorname = "UPDATE `user` SET `Vorname`= '$vorname' WHERE `UserID` = $SESSION_userID";
+		$resvorname= mysqli_query($mysqlconnection, $qvorname);
+	}
+	
+	if ($_POST["nachname"]!= NULL)
+	{
+		$qnachname = "UPDATE user SET `Nachname` ='$nachname' WHERE UserID = $SESSION_userID";
+		$resnachname= mysqli_query($mysqlconnection, $qnachname);
+	}
+	
+	if  ($_POST["username"]!= NULL)
+	{
+		$qusername = "UPDATE user SET `Username` ='$username' WHERE UserID = $SESSION_userID";
+		$resusername= mysqli_query($mysqlconnection, $qusername);
+	}
+	
+	if  ($_POST["email"]!= NULL) 
+	{
+		$qemail = "UPDATE user SET `Email` ='$email' WHERE UserID = $SESSION_userID";
+		$resemail= mysqli_query($mysqlconnection, $qemail);
+	}
+	
+	if  ($_POST["passwort"]!= NULL)
+	{
+		$qpasswort = "UPDATE user SET `Passwort` ='$passwort' WHERE UserID = $SESSION_userID";
+		$respasswort= mysqli_query($mysqlconnection, $qpasswort);
+	}
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,7 +52,7 @@ require ("inc.php");
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title> Lotto 6aus49  - Sloterino</title>
+    <title>Verwalterkonto- Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
@@ -53,17 +73,9 @@ require ("inc.php");
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-gamepad"></i><span>Games</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i class="fas fa-user"></i><span>Profile</span></a></li>
-                    <?php 
-                    $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
-                    $res = $conn->query($sql);
-                    if($res->num_rows > 0){
-                        if($res->fetch_assoc()["Admin"] == 1){
-                            echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
-                        }
-                    }else{
-                        die("Invalid or no userID");
-                    }
-                    ?>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>
@@ -145,150 +157,9 @@ require ("inc.php");
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-1">Lottoziehung</h3>
-                    
-                    <?php
-                    #Überprüfung Doppelte
-					$set = [];
-					foreach ($getippteZahlen as $zahl)
-					{
-						if (in_array($zahl, $set)) 
-						{
-							echo("Ihre ausgewählten Zahlen waren nicht einzigartig. Bitte wählen Sie neu.");
-							$Ende = true;
-							break;
-						}
-						
-						else 
-						{
-							$set[] = $zahl; 
-						}
-					}
-
-					
-					if ($Ende == false) #falls keine Zahl doppelt war
-					{
-								
-						#Zufallszahlen
-						$alleZahlen = range (1,49);
-						shuffle ($alleZahlen);
-						
-						$lottoZahlen = array_slice($alleZahlen, 0,6);
-						sort($lottoZahlen);
-						
-						for ($x = 0; $x < 6; $x++  )
-						{
-							$y = $x +1;
-							echo "Die $y. Lottozahl ist $lottoZahlen[$x] <BR>";
-						}
-
-						#Überprüfung der Übereinstimmungen
-						for($x=0; $x<6; $x++)
-						{
-							if(in_array($getippteZahlen[$x] ,$lottoZahlen))
-							{
-							array_push ($alleRichtige, $getippteZahlen[$x]);
-							}
-						}
-						
-						#Ausgabe der Richtigen
-						if (count($alleRichtige) >  0)
-						{
-							echo ("</BR>Ihre Richtigen:</BR>");
-					
-						
-							for ($x=0; $x<count($alleRichtige); $x++)
-							{
-								echo ("$alleRichtige[$x] ");
-							}
-
-							#Preisberechnung
-							$qgewinn = "SELECT Gewinn FROM game WHERE GameID = 1";
-						  
-							$Hauptgewinn= mysqli_query($mysqlconnection, $qgewinn);
-						  
-									$row = mysqli_fetch_assoc($Hauptgewinn); 
-									if(!$row) {
-										echo "no rows\n";
-									}
-									$gewinn = $row["Gewinn"];
-											
-							
-							if (count($alleRichtige) ==  2)
-							{
-								$gewonnenerPreis = $gewinn / 62500; 
-							}
-							
-							if (count($alleRichtige) ==  3)
-							{
-								$gewonnenerPreis = $gewinn / 15625;
-							}
-							
-							if (count($alleRichtige) ==  4)
-							{
-								$gewonnenerPreis = $gewinn / 2000;
-							}
-							
-							if (count($alleRichtige) ==  5)
-							{
-								$gewonnenerPreis = $gewinn / 50;
-							}
-							
-							if (count($alleRichtige) ==  6)
-							{
-								$gewonnenerPreis = $gewinn;
-							}
-							
-							if (count($alleRichtige) > 1)
-							{
-							echo ("<BR> <BR> Sie haben $gewonnenerPreis € gewonnen!");
-							}	
-						}
-						
-						if ((count($alleRichtige)) ==0 or (count($alleRichtige)) ==1 )
-						{
-								echo ("<BR> <BR>Sie haben leider nichts gewonnen!");
-						}
-					}
-						
-						#Kontostand aktualisieren
-						$qKonto = " SELECT Kontostand FROM User WHERE UserID = $SESSION_userID ";
-						$resKonto= mysqli_query($mysqlconnection, $qKonto);
-								
-								$row = mysqli_fetch_assoc($resKonto); 
-								if(!$row) {
-									echo "no rows\n";
-								}
-								$Kontostand = $row["Kontostand"];
-								
-						$qEinsatz = " SELECT Mindesteinsatz FROM Game WHERE Name = 'Lotto'";
-						$resEinsatz= mysqli_query($mysqlconnection, $qEinsatz);
-								
-								$row = mysqli_fetch_assoc($resEinsatz); 
-								if(!$row) {
-									echo "no rows\n";
-								}
-								$Einsatz = $row["Mindesteinsatz"];
-								
-								$neuerKontostand = $Kontostand - $Einsatz + $gewonnenerPreis;
-								
-						
-						$qneuerStand = "UPDATE User SET `Kontostand` =$neuerKontostand WHERE UserID = $SESSION_userID";
-					 
-						$Einsatz= mysqli_query($mysqlconnection, $qneuerStand);			
-
-
-
-?>	
-
-<BR>
-<BR>
-<BR>
-<BR>
-
-<A HREF="lotto.html" NAME="x">neue Zahlen auswählen</A>
-</BODY>
-
+                    <h3 class="text-dark mb-1">Verwalterkonto</h3>
+                    <P> Ihre Daten wurden aktualisiert!</P>
+                    <A HREF="verwalterkonto.php" NAME="x">Zurück Ihrem Konto</A>
 
                 </div>
                 
