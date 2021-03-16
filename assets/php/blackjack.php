@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 $controller = $_POST["controller"];
 
 include_once("inc.php");
@@ -63,19 +65,15 @@ function EndController(){
 
 	if (PlayerValue() > 21){
 		Loss();
-		return;
 	}
-	if (BankValue() > 21){
+	else if (BankValue() > 21){
 		Win();
-		return;
 	}
-	if (PlayerValue() > BankValue()){
+	else if (PlayerValue() > BankValue()){
 		Win();
-		return;
 	}
 	else{
 		Loss();
-		return;
 	}
 }
 
@@ -133,20 +131,22 @@ function Win(){
 	$amount = $bet;
 
 	$msg = "You've won! $amount$ will be transfered to your account";
-	$balance = Balance() + $amount;
 	$win = true;
 
-	echo json_encode(["msg"=>$msg, "balance"=>$balance, "win"=>$win]);
+	AddBalance($amount);
+
+	echo json_encode(["msg"=>$msg, "win"=>$win]);
 }
 
 function Loss(){
 	global $bet;
 	$amount = $bet;
 	$msg = "You've lost! $amount$ will be subtracted from your account balance";
-	$balance = Balance() - $amount;
 	$win = false;
 
-	echo json_encode(["msg"=>$msg, "balance"=>$balance, "win"=>$win]);
+	SubtractBalance($amount);
+
+	echo json_encode(["msg"=>$msg, "win"=>$win]);
 }
 
 function Blackjack(){
@@ -155,24 +155,48 @@ function Blackjack(){
 	$amount = $bet * 1.5;
 
 	$msg = "Blackjack! $amount$ will be transfered to your account";
-	$balance = Balance() + $amount;
+	AddBalance($amount);
 	$win = true;
 
-	echo json_encode(["msg"=>$msg, "balance"=>$balance, "win"=>$win]);
+	echo json_encode(["msg"=>$msg, "win"=>$win]);
 }
 
 function Balance(){
-	// not yet implemented
-	return 43;
+	global $conn;
+	$userId = $_SESSION["user-id"];
+	
+	$sql = "SELECT Kontostand FROM User WHERE UserID = $userId";
+	$result = mysqli_query($conn, $sql);
+
+	if(mysqli_num_rows($result) == 1){
+		$row = mysqli_fetch_assoc($result);
+		return $row["Kontostand"];
+	}
 }
 
 function SubtractBalance($value){
-	// Not yet implemented
-	return;
+	global $conn;
+	$userId = $_SESSION["user-id"];
+
+	$balance = Balance() - $value;
+
+	$sql = "UPDATE User SET Kontostand = $balance";
+	if(mysqli_query($conn, $sql)){
+		$sql = "INSERT INTO PaymentHistory SET Datum = (SELECT NOW()), Betrag = -$value, Typ = 'Blackjack', UserID = $userId";
+		mysqli_query($conn, $sql);
+	}
 }
 
 function AddBalance($value){
-	// not yet implemented
-	return;
+	global $conn;
+	$userId = $_SESSION["user-id"];
+
+	$balance = Balance() + $value;
+
+	$sql = "UPDATE User SET Kontostand = $balance";
+	if (mysqli_query($conn, $sql)){
+		$sql = "INSERT INTO PaymentHistory SET Datum = (SELECT NOW()), Betrag = $value, Typ = 'Blackjack', UserID = $userId";
+		mysqli_query($conn, $sql);
+	}
 }
 ?>

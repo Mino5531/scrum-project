@@ -1,6 +1,6 @@
 // variables
 
-const url = "assets/php/blackjack.php"
+const urlBlackjack = "assets/php/blackjack.php"
 var request, cards, cache
 
 // event listeners
@@ -29,7 +29,7 @@ function StartGame(){
 
 	request = $.ajax({
 		type: "post",
-		url: url,
+		url: urlBlackjack,
 		data: {
 			controller: "start",
 			bet: $("#bet").val()
@@ -41,7 +41,7 @@ function StartGame(){
 			try {
 				cards = JSON.parse(data)
 			} catch (error) {
-				jsonParseError(error, data)
+				JsonParseError(error, data)
 				return
 			}
 			cache = cards.bank.pop()
@@ -56,10 +56,14 @@ function StartGame(){
 
 			$("#hit").text("Hit")
 			$("#stand").show()
+			if(PlayerValue == 21){
+				Blackjack()
+				return
+			}
 			CheckValue()
 		}
 		else{
-			ajaxError(status)
+			AjaxError(status)
 			return
 		}
 	})
@@ -68,7 +72,7 @@ function StartGame(){
 function Blackjack(){
 	request = $.ajax({
 		type: "post",
-		url: url,
+		url: urlBlackjack,
 		data: {
 			controller: "blackjack",
 			cards: cards
@@ -81,7 +85,7 @@ function Blackjack(){
 			try {
 				var data = JSON.parse(data);
 			} catch (error) {
-				jsonParseError(error, data)
+				JsonParseError(error, data)
 				return
 			}
 			var msg = data.msg
@@ -90,7 +94,7 @@ function Blackjack(){
 			$("#result-msg").text(msg)
 		}
 		else{
-			ajaxError(status)
+			AjaxError(status)
 		}
 	})
 }
@@ -99,7 +103,7 @@ function Hit() {
 	PushCard();
 	request = $.ajax({
 		type: "post",
-		url: url,
+		url: urlBlackjack,
 		data: {
 			controller: "player-hit",
 		}
@@ -110,7 +114,7 @@ function Hit() {
 			try {
 				var card = JSON.parse(data)
 			} catch (error) {
-				jsonParseError(error, data)
+				JsonParseError(error, data)
 				return
 			}
 			var card = JSON.parse(data)
@@ -120,7 +124,7 @@ function Hit() {
 			CheckValue()
 		}
 		else{
-			ajaxError(status)
+			AjaxError(status)
 			return
 		}
 	})
@@ -132,13 +136,15 @@ function Bank(){
 	if (BankValue() < 17){
 		BankHit()
 	}
-	EndGame()
+	else{
+		EndGame()
+	}
 }
 
 function BankHit(){
 	request = $.ajax({
 		type: "post",
-		url: url,
+		url: urlBlackjack,
 		data: {
 			controller: "bank-hit"
 		}
@@ -149,7 +155,7 @@ function BankHit(){
 			try {
 				var card = JSON.parse(data)
 			} catch (error) {
-				jsonParseError(error, data);
+				JsonParseError(error, data);
 				return
 			}
 			cards.bank.push(card)
@@ -164,7 +170,7 @@ function BankHit(){
 			}
 		}
 		else{
-			ajaxError(status)
+			AjaxError(status)
 			return
 		}
 	})
@@ -173,7 +179,7 @@ function BankHit(){
 function EndGame(){
 	request = $.ajax({
 		type: "post",
-		url: url,
+		url: urlBlackjack,
 		data: {
 			controller: "end",
 			cards: cards,
@@ -186,7 +192,7 @@ function EndGame(){
 			try {
 				var data = JSON.parse(data)
 			} catch (error) {
-				jsonParseError(error, data);
+				JsonParseError(error, data);
 				return
 			}
 			// code:
@@ -202,14 +208,17 @@ function EndGame(){
 			}
 			$("#result-msg").text(msg)
 
+			alert(msg)
+
 			EnableButtons()
 			$("#hit").hide()
 			$("#stand").hide()
 
 			$("#restart").show()
+			LoadBalance()
 		}
 		else{
-			ajaxError(status)
+			AjaxError(status)
 			return
 		}
 	})
@@ -288,14 +297,6 @@ function PlayerValue(){
 function DisplayValues(){
 	$("#bank-value").text(BankValue())
 	$("#player-value").text(PlayerValue())
-}
-
-function ajaxError(status){
-	console.error("ajax call was unsuccessfull! \n\nstatus: " + status)
-}
-
-function jsonParseError(error, data){
-	console.error("json could not be parsed! \n\nerror: " + error + "\n\nphp: " + data)
 }
 
 function PushCard(){
