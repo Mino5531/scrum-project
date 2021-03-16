@@ -5,7 +5,7 @@ session_start();
 $controller = $_POST["controller"];
 
 require("inc.php");
-header('Content-Type: application/json');
+//header('Content-Type: application/json');
 // variables
 $bet;
 $cards = ["player"=>[], "bank"=>[]];
@@ -97,7 +97,7 @@ function DrawCard(){
 	$sql = "SELECT Color, Face, Value FROM Card WHERE Id=$i";
 
 	$result = mysqli_query($conn, $sql);
-
+	echo(mysqli_error());
 	if (mysqli_num_rows($result) > 0){
 		$card = mysqli_fetch_assoc($result);
 		return $card;
