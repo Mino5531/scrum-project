@@ -366,7 +366,8 @@ CREATE TABLE IF NOT EXISTS `Game` (
   `Name` varchar(45) COLLATE utf8_bin NOT NULL,
   `URL` varchar(65) COLLATE utf8_bin NOT NULL,
   `Mindesteinsatz` float NOT NULL,
-  `Gewinn` float NOT NULL
+  `Gewinn` float NOT NULL,
+  PRIMARY KEY(`GameID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- Dumping data for table swp.Game: ~0 rows (approximately)
@@ -379,7 +380,10 @@ CREATE TABLE IF NOT EXISTS `PaymentHistory` (
   `Datum` datetime(6) NOT NULL,
   `Betrag` float NOT NULL,
   `Typ` varchar(11) COLLATE utf8_bin NOT NULL,
-  `UserID` int(11) NOT NULL
+  `UserID` int(11) NOT NULL,
+  PRIMARY KEY(`PaymentID`),
+  KEY `User` (`UserID`),
+  CONSTRAINT `User` FOREIGN KEY (`UserID`) REFERENCES `User` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
