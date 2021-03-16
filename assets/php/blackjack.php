@@ -4,8 +4,8 @@ session_start();
 
 $controller = $_POST["controller"];
 
-include_once("inc.php");
-
+require("inc.php");
+header('Content-Type: application/json');
 // variables
 $bet;
 $cards = ["player"=>[], "bank"=>[]];
