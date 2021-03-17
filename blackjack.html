@@ -145,6 +145,12 @@ if(mysqli_connect_errno()){
                     <div class="alert" id="loss" style="display: none;">
                         <strong>Loss!</strong> <span id="loss-text"></span>
                     </div>
+                    <div class="alert" id="insufficient-funds" style="display: none;">
+                        <strong>ERROR!</strong> <span>You cannot bet more than you currently have in your balance</span>
+                    </div>
+                    <div class="alert" id="invalid-bet" style="display: none;">
+                        <strong>ERROR!</strong> <span>Please enter a valid bet</span>
+                    </div>
                     <h3 class="text-dark mb-1">Blackjack</h3>
                     <div class="mt-5 row" style="height: 20rem;">
                         <div class="col-3">

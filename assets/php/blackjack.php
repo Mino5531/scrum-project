@@ -129,7 +129,7 @@ function Win(){
 
 	$amount = $bet;
 
-	$msg = "You've won! $amount$ will be transfered to your account";
+	$msg = "$amount$ will be transfered to your account";
 	$win = true;
 
 	AddBalance($amount);
@@ -140,7 +140,7 @@ function Win(){
 function Loss(){
 	global $bet;
 	$amount = $bet;
-	$msg = "You've lost! $amount$ will be subtracted from your account balance";
+	$msg = "$amount$ will be subtracted from your account balance";
 	$win = false;
 
 	SubtractBalance($amount);

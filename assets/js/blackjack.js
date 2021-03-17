@@ -21,8 +21,18 @@ $("#stand").click(function() {
 // event handlers
 
 function StartGame(){
-	if ($("#bet").val() == "" || $("#bet").val() == 0){
-		alert("Please enter your bet")
+	if ($("#bet").val() <= 0){
+		$("#invalid-bet").show()
+		setTimeout(function () {
+			$('#invalid-bet').fadeOut('slow');
+		}, 1000);
+		return
+	}
+	if ($("#bet").val() > balance ){
+		$("#insufficient-funds").show()
+		setTimeout(function () {
+			$('#insufficient-funds').fadeOut('slow');
+		}, 1000);
 		return
 	}
 	$("#bet").prop("disabled", true)
