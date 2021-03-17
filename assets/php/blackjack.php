@@ -97,7 +97,6 @@ function DrawCard(){
 	$sql = "SELECT Color, Face, Value FROM Card WHERE Id=$i";
 
 	$result = mysqli_query($conn, $sql);
-	echo(mysqli_error());
 	if (mysqli_num_rows($result) > 0){
 		$card = mysqli_fetch_assoc($result);
 		return $card;

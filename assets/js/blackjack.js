@@ -201,14 +201,19 @@ function EndGame(){
 			var win = data.win;
 
 			if (win){
-				$("#result-msg").addClass("text-success")
+				$("#win").show()
+				$("#win-text").text(msg)
+				setTimeout(function () {
+					$('#win').fadeOut('slow');
+				}, 1000);
 			}
 			else{
-				$("#result-msg").addClass("text-danger")
+				$("#loss").show()
+				$("#loss-text").text(msg)
+				setTimeout(function () {
+					$('#loss').fadeOut('slow');
+				}, 1000);
 			}
-			$("#result-msg").text(msg)
-
-			alert(msg)
 
 			EnableButtons()
 			$("#hit").hide()
