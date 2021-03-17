@@ -13,6 +13,9 @@ switch ($controller) {
 	case "user":
 		UserController();
 		break;
+	case "authorization":
+		AuthorizationController();
+		break;
 }
 
 // controller
@@ -59,4 +62,15 @@ function UserController(){
 	}
 
 	// Falls Profilbilder eingebaut werden sollen müssen sie in dieser Funktion noch ergänzt werden 
+}
+
+function AuthorizationController(){
+	$userId = $_SESSION['user-id'];
+
+	if ($userId == 0 || $userId == null){
+		echo false;
+	}
+	else{
+		echo true;
+	}
 }

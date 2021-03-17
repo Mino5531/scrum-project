@@ -1,4 +1,5 @@
 $(document).ready(LoadData)
+$(document).ready(CheckLogin)
 const urlSite = "assets/php/site.php"
 
 function LoadData(){
@@ -22,12 +23,6 @@ function LoadUserData(){
 			}
 			DisplayUsername(username)
 		}
-	}).done(function() {
-		console.log("second success")
-	}).fail(function() {
-		console.log("ajax call failed")
-	}).always(function() {
-		console.log("complete");
 	})
 }
 
@@ -52,12 +47,6 @@ function LoadBalance(){
 			DisplayBalance(data.balance)
 			DisplayHistory(data.history)
 		}
-	}).done(function() {
-		console.log("second success")
-	}).fail(function() {
-		console.log("ajax call failed")
-	}).always(function(){
-		console.log("complete")
 	})
 }
 
@@ -138,4 +127,19 @@ function stringifyDate(datetime){
 	else{
 		return "now"
 	}
+}
+
+function CheckLogin(){
+	$.ajax({
+		type: "get",
+		url: urlSite,
+		data: {
+			controller: "authorization"
+		},
+		success: function(data){ // data represents a boolean which describes the login status
+			if (!data){
+				window.location.redirect = "landing.html"
+			}
+		}
+	})
 }
