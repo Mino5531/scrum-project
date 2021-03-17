@@ -26,8 +26,12 @@ else{
             if(isset($_POST['lock']) && isset($_POST['id'])){
                 $conn->query("UPDATE User SET Gesperrt = ".$_POST['lock']." WHERE UserID = ".$_POST['id']);
             }else{
-                http_response_code(400);
-                die();
+                if(isset($_POST['promote']) && isset($_POST['id'])){
+                    $conn->query("UPDATE User SET Admin = 1 WHERE UserID = ".$_POST['id']);
+                }else{
+                    http_response_code(400);
+                    die();
+                }
             }
         }
     }
