@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$controller = $_POST["controller"];
+$controller = $_GET["controller"];
 
 include_once("inc.php");
 
@@ -12,6 +12,9 @@ switch ($controller) {
 		break;
 	case "user":
 		UserController();
+		break;
+	case "authorization":
+		AuthorizationController();
 		break;
 }
 
@@ -41,6 +44,10 @@ function BalanceController(){
 			$data = ["balance"=>$balance, "history"=>$history];
 			echo json_encode($data);
 		}
+		else{
+			$data = ["balance"=>$balance];
+			echo json_encode($data);
+		}
 	}
 }
 
@@ -59,4 +66,15 @@ function UserController(){
 	}
 
 	// Falls Profilbilder eingebaut werden sollen müssen sie in dieser Funktion noch ergänzt werden 
+}
+
+function AuthorizationController(){
+	$userId = $_SESSION['user-id'];
+
+	if ($userId == 0 || $userId == null){
+		echo false;
+	}
+	else{
+		echo true;
+	}
 }

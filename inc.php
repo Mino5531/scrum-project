@@ -2,8 +2,8 @@
 
 <?php
 $host = "localhost";
-$user = "root";
-$passwd ="";
+$user = "swpuser";
+$passwd ="swpuser";
 $datenbank = "swp";
 ?>
 

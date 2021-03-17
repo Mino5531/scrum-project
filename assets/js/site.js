@@ -1,4 +1,5 @@
 $(document).ready(LoadData)
+$(document).ready(CheckLogin)
 const urlSite = "assets/php/site.php"
 
 function LoadData(){
@@ -8,7 +9,7 @@ function LoadData(){
 
 function LoadUserData(){
 	$.ajax({
-		type: "post",
+		type: "get",
 		url: urlSite,
 		data: {
 			controller: "user"
@@ -22,12 +23,6 @@ function LoadUserData(){
 			}
 			DisplayUsername(username)
 		}
-	}).done(function() {
-		console.log("second success")
-	}).fail(function() {
-		console.log("ajax call failed")
-	}).always(function() {
-		console.log("complete");
 	})
 }
 
@@ -37,7 +32,7 @@ function DisplayUsername(username){
 
 function LoadBalance(){
 	$.ajax({
-		type: "post",
+		type: "get",
 		url: urlSite,
 		data: {
 			controller: "balance",
@@ -52,12 +47,6 @@ function LoadBalance(){
 			DisplayBalance(data.balance)
 			DisplayHistory(data.history)
 		}
-	}).done(function() {
-		console.log("second success")
-	}).fail(function() {
-		console.log("ajax call failed")
-	}).always(function(){
-		console.log("complete")
 	})
 }
 
@@ -69,6 +58,10 @@ function DisplayHistory(transactions){
 	var recentTransactions = document.querySelector("#recent-transactions")
 
 	recentTransactions.innerHTML = ""
+
+	if(transactions == null){
+		return
+	}
 
 	for(let i = 0; i < transactions.length; i++){
 		var history = transactions[i];
@@ -138,4 +131,19 @@ function stringifyDate(datetime){
 	else{
 		return "now"
 	}
+}
+
+function CheckLogin(){
+	$.ajax({
+		type: "get",
+		url: urlSite,
+		data: {
+			controller: "authorization"
+		},
+		success: function(data){ // data represents a boolean which describes the login status
+			if (!data){
+				window.location.redirect = "landing.html"
+			}
+		}
+	})
 }
