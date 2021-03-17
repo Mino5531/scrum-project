@@ -51,7 +51,7 @@ if(mysqli_connect_errno()){
                                 }else{
                                     die("Invalid or no userID");
                                 }
-                                ?>
+                    ?>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0"
                         id="sidebarToggle" type="button"></button></div>
@@ -112,6 +112,7 @@ if(mysqli_connect_errno()){
                                     </div>
                                 </div>
                             </li>
+                            <!-- balance and username -->
                             <li class="nav-item dropdown no-arrow mx-1">
                                 <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: rgb(84,85,96);" id="balance"></a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
@@ -132,6 +133,7 @@ if(mysqli_connect_errno()){
                                     </div>
                                 </div>
                             </li>
+                            <!-- end balance and username -->
                         </ul>
                     </div>
                 </nav>
@@ -180,10 +182,10 @@ if(mysqli_connect_errno()){
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="assets/js/site.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/blackjack.js"></script>
-    <script src="assets/js/site.js"></script>
 </body>
 
 </html>

@@ -7,90 +7,100 @@ function LoadData(){
 }
 
 function LoadUserData(){
-	var request = $.ajax({
-		type: "post",
+	$.ajax({
+		type: "get",
 		url: urlSite,
 		data: {
 			controller: "user"
-		}
-	})
-
-	request.done(function(data, status){
-		if (status == "success"){
+		},
+		success: function(data){
 			try {
 				var username = JSON.parse(data)
 			} catch(error){
 				JsonParseError(error, data)
 				return
 			}
-			$("#username").text(username)
+			DisplayUsername(username)
 		}
+	}).done(function() {
+		console.log("second success")
+	}).fail(function() {
+		console.log("ajax call failed")
+	}).always(function() {
+		console.log("complete");
 	})
+}
+
+function DisplayUsername(username){
+	$("#username").text(username)
 }
 
 function LoadBalance(){
-	var request = $.ajax({
-		type: "post",
+	$.ajax({
+		type: "get",
 		url: urlSite,
 		data: {
 			controller: "balance",
-		}
-	})
-
-	request.done(function(data, status){
-		if (status == "success"){
-			try {
-				var data = JSON.parse(data)
-			} catch (error) {
-				JsonParseError(error, data)
+		},
+		success: function(json){
+			try {
+				var data = JSON.parse(json)
+			} catch(error){
+				JsonParseError(error, json)
 				return
 			}
-			$("#balance").text(data.balance + "$")
-
-			// Recent Transactions
-
-			var recentTransactions = document.querySelector("#recent-transactions")
-
-			recentTransactions.innerHTML = ""
-
-			for(let i = 0; i < data.history.length; i++){
-				var history = data.history[i];
-
-				date = stringifyDate(history.date)
-
-				// dropdown item
-				var item = document.createElement("a")
-				item.className = "dropdown-item d-flex align-items-center"
-
-				// container
-				var container = document.createElement("div")
-				container.className = "fw-bold"
-
-				// Type
-				var textContainer = document.createElement("div")
-				textContainer.className = "text-truncate"
-				var type = document.createElement("span")
-				type.innerText = history.type
-				textContainer.appendChild(type)
-				container.appendChild(textContainer)
-
-				// amount & date
-				var paragraph = document.createElement("p")
-				paragraph.className = "small text-gray-500 mb-0"
-				paragraph.innerText = history.amount + "$ · " + date
-				container.appendChild(paragraph)
-
-				item.appendChild(container)
-				recentTransactions.appendChild(item)
-			}
+			DisplayBalance(data.balance)
+			DisplayHistory(data.history)
 		}
-		else{
-			AjaxError(status)
-			return
-		}
+	}).done(function() {
+		console.log("second success")
+	}).fail(function() {
+		console.log("ajax call failed")
+	}).always(function(){
+		console.log("complete")
 	})
 }
 
+function DisplayBalance(balance){
+	$("#balance").text(balance + "$")
+}
+
+function DisplayHistory(transactions){
+	var recentTransactions = document.querySelector("#recent-transactions")
+
+	recentTransactions.innerHTML = ""
+
+	for(let i = 0; i < transactions.length; i++){
+		var history = transactions[i];
+
+		date = stringifyDate(history.date)
+
+		// dropdown item
+		var item = document.createElement("a")
+		item.className = "dropdown-item d-flex align-items-center"
+
+		// container
+		var container = document.createElement("div")
+		container.className = "fw-bold"
+
+		// Type
+		var textContainer = document.createElement("div")
+		textContainer.className = "text-truncate"
+		var type = document.createElement("span")
+		type.innerText = history.type
+		textContainer.appendChild(type)
+		container.appendChild(textContainer)
+
+		// amount & date
+		var paragraph = document.createElement("p")
+		paragraph.className = "small text-gray-500 mb-0"
+		paragraph.innerText = history.amount + "$ · " + date
+		container.appendChild(paragraph)
+
+		item.appendChild(container)
+		recentTransactions.appendChild(item)
+	}
+}
 
 function AjaxError(status){
 	console.error("ajax call was unsuccessfull! \n\nstatus: " + status)

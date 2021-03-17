@@ -1,9 +1,7 @@
 <?php
 session_start();
 
-$_SESSION["user-id"] = 1;
-
-$controller = $_POST["controller"];
+$controller = $_GET["controller"];
 
 include_once("inc.php");
 
