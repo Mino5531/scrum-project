@@ -44,6 +44,10 @@ function BalanceController(){
 			$data = ["balance"=>$balance, "history"=>$history];
 			echo json_encode($data);
 		}
+		else{
+			$data = ["balance"=>$balance];
+			echo json_encode($data);
+		}
 	}
 }
 

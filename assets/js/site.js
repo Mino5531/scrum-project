@@ -59,6 +59,10 @@ function DisplayHistory(transactions){
 
 	recentTransactions.innerHTML = ""
 
+	if(transactions == null){
+		return
+	}
+
 	for(let i = 0; i < transactions.length; i++){
 		var history = transactions[i];
 
