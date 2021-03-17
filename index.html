@@ -23,9 +23,10 @@ if(mysqli_connect_errno()){
     <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
     <link rel="stylesheet" href="assets/css/profile.css">
     <link rel="stylesheet" href="assets/css/untitled.css">
+    <link rel="stylesheet" href="assets/css/message.css">
 </head>
 
-<body id="page-top">
+<body id="page-top" onload="readyPage()">
     <div id="wrapper">
         <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
             <div class="container-fluid d-flex flex-column p-0"><a
@@ -40,16 +41,16 @@ if(mysqli_connect_errno()){
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i
                                 class="fas fa-user"></i><span>Profile</span></a></li>
                     <?php 
-                                $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
-                                $res = $conn->query($sql);
-                                if($res->num_rows > 0){
-                                    if($res->fetch_assoc()["Admin"] == 1){
-                                        echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
-                                    }
-                                }else{
-                                    die("Invalid or no userID");
-                                }
-                                ?>
+                        $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
+                        $res = $conn->query($sql);
+                        if($res->num_rows > 0){
+                            if($res->fetch_assoc()["Admin"] == 1){
+                                echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
+                            }
+                        }else{
+                            die("Invalid or no userID");
+                        }
+                    ?>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0"
                         id="sidebarToggle" type="button"></button></div>
@@ -112,12 +113,15 @@ if(mysqli_connect_errno()){
                             </li>
                             <!-- balance and username -->
                             <li class="nav-item dropdown no-arrow mx-1">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: rgb(84,85,96);" id="balance"></a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
+                                        aria-expanded="false" data-bs-toggle="dropdown" href="#"
+                                        style="color: rgb(84,85,96);" id="balance"></a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
                                         <h6 class="dropdown-header">Recent Transactions</h6>
                                         <div id="recent-transactions">
                                         </div>
-                                        <a class="dropdown-item text-center small text-gray-500" href="transactions.html">Show all transactions</a>
+                                        <a class="dropdown-item text-center small text-gray-500"
+                                            href="transactions.html">Show all transactions</a>
                                     </div>
                                 </div>
                                 <div class="shadow dropdown-list dropdown-menu dropdown-menu-end"
@@ -125,9 +129,17 @@ if(mysqli_connect_errno()){
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small" id="username"></span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
-                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="profile.html"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a>
-                                        <div class="dropdown-divider"></div><a class="dropdown-item" href="logout.html"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
+                                        aria-expanded="false" data-bs-toggle="dropdown" href="#"><span
+                                            class="d-none d-lg-inline me-2 text-gray-600 small"
+                                            id="username"></span><img class="border rounded-circle img-profile"
+                                            src="assets/img/avatars/avatar1.jpeg"></a>
+                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a
+                                            class="dropdown-item" href="profile.html"><i
+                                                class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a>
+                                        <div class="dropdown-divider"></div><a class="dropdown-item"
+                                            href="logout.html"><i
+                                                class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
                                     </div>
                                 </div>
                             </li>
@@ -136,12 +148,28 @@ if(mysqli_connect_errno()){
                     </div>
                 </nav>
                 <div class="container-fluid">
+                    <div class="success" id=success-dlg style="display: none;">
+                        <strong>Success!</strong> Changes were successful
+                    </div>
                     <div class="d-sm-flex justify-content-between align-items-center mb-4">
                         <h3 class="text-dark mb-0">Games</h3>
+                        <?php
+                            $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
+                            $res = $conn->query($sql);
+                            if($res->num_rows > 0){
+                                if($res->fetch_assoc()["Admin"] == 1){
+                                    echo('<button class="btn btn-primary float-end" id="game-edit">Edit</button>');
+                                    echo('<button class="btn btn-primary float-end" id="game-add" style="display: none;">Add game</button>');
+                                    echo('<button class="btn btn-success float-end" id="game-save" style="display: none;">Save</button>');
+                                }
+                            }else{
+                                die("Invalid or no userID");
+                            } 
+                        ?>
                     </div>
                     <div class="row">
-                        <ul class="list-group">
-                            <li class="list-group-item"><button class="btn float-end rounded-circle border-0"
+                        <ul class="list-group" id='game-list'>
+                            <!--<li class="list-group-item"><button class="btn float-end rounded-circle border-0"
                                     type="button"><i class="fa fa-arrow-right"></i></button><strong
                                     class="gametitle" id="btn-roulette">Roulette</strong></li>
                             <li class="list-group-item"><button class="btn float-end rounded-circle border-0"
@@ -156,7 +184,7 @@ if(mysqli_connect_errno()){
                                     class="gametitle">Blackjack</strong></li>
                             <li class="list-group-item"><button class="btn float-end rounded-circle border-0"
                                     type="button" id="btn-slots"><i class="fa fa-arrow-right"></i></button><strong
-                                    class="gametitle">Slots</strong></li>
+                                    class="gametitle">Slots</strong></li>-->
                         </ul>
                     </div>
                 </div>
@@ -173,7 +201,6 @@ if(mysqli_connect_errno()){
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
-    <script src="assets/js/index.js"></script>
     <script src="assets/js/site.js"></script>
 </body>
 
