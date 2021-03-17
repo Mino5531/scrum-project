@@ -36,10 +36,11 @@ if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i
                                 class="fas fa-user"></i><span>Profile</span></a></li>
                     <?php 
+                                require("assets/php/inc.php");
                                 $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
-                                $res = $conn->query($sql);
-                                if($res->num_rows > 0){
-                                    if($res->fetch_assoc()["Admin"] == 1){
+                                $res = mysqli_query($conn, $sql);
+                                if(mysqli_num_rows($res) > 0){
+                                    if(mysqli_fetch_assoc($res)["Admin"] == 1){
                                         echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
                                     }
                                 }else{
