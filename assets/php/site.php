@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$controller = $_POST["controller"];
+$controller = $_GET["controller"];
 
 include_once("inc.php");
 

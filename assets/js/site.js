@@ -8,7 +8,7 @@ function LoadData(){
 
 function LoadUserData(){
 	$.ajax({
-		type: "post",
+		type: "get",
 		url: urlSite,
 		data: {
 			controller: "user"
@@ -37,7 +37,7 @@ function DisplayUsername(username){
 
 function LoadBalance(){
 	$.ajax({
-		type: "post",
+		type: "get",
 		url: urlSite,
 		data: {
 			controller: "balance",
