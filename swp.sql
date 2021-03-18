@@ -365,8 +365,8 @@ CREATE TABLE IF NOT EXISTS `Game` (
   `GameID` int(11) NOT NULL,
   `Name` varchar(45) COLLATE utf8_bin NOT NULL,
   `URL` varchar(65) COLLATE utf8_bin NOT NULL,
-  `Mindesteinsatz` float NOT NULL,
-  `Gewinn` float NOT NULL,
+  `Mindesteinsatz` float DEFAULT NULL,
+  `Gewinn` float DEFAULT NULL,
   PRIMARY KEY(`GameID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
