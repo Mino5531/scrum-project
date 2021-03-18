@@ -24,6 +24,10 @@ if(mysqli_connect_errno()){
     <link rel="stylesheet" href="assets/css/profile.css">
     <link rel="stylesheet" href="assets/css/untitled.css">
     <link rel="stylesheet" href="assets/css/message.css">
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body id="page-top" onload="readyPage()">
@@ -151,6 +155,28 @@ if(mysqli_connect_errno()){
                     <div class="success" id=success-dlg style="display: none;">
                         <strong>Success!</strong> Changes were successful
                     </div>
+                    <div class="modal fade" id="addGameModal" tabindex="-1" role="dialog"
+                        aria-labelledby="addGameModalTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addGameModalLongTitle">Add new game</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <input class="form-control" placeholder="Name" id="new-game-name"
+                                        style="margin-top: 10px; margin-bottom: 10px;" />
+                                    <input class="form-control" placeholder="URL" id="new-game-url"
+                                        style="margin-bottom: 10px;" />
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                        onclick="$('#addGameModal').modal('hide')">Close</button>
+                                    <button type="button" class="btn btn-primary" onclick="saveNewGame()">Save
+                                        changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="d-sm-flex justify-content-between align-items-center mb-4">
                         <h3 class="text-dark mb-0">Games</h3>
                         <?php
@@ -159,7 +185,7 @@ if(mysqli_connect_errno()){
                             if($res->num_rows > 0){
                                 if($res->fetch_assoc()["Admin"] == 1){
                                     echo('<button class="btn btn-primary float-end" id="game-edit">Edit</button>');
-                                    echo('<button class="btn btn-primary float-end" id="game-add" style="display: none;">Add game</button>');
+                                    echo('<button class="btn btn-primary float-end" id="game-add" style="display: none;" data-target="#addGameModal">Add game</button>');
                                     echo('<button class="btn btn-success float-end" id="game-save" style="display: none;">Save</button>');
                                 }
                             }else{
@@ -196,9 +222,6 @@ if(mysqli_connect_errno()){
             </footer>
         </div>
     </div>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/site.js"></script>

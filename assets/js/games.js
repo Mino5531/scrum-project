@@ -29,6 +29,7 @@ function editGames() {
     for (var key in edits) {
         edits[key][0].style.display = '';
         edits[key][1].style.display = '';
+        edits[key][2].style.display = '';
     }
 }
 
@@ -44,6 +45,7 @@ function saveGames() {
     for (var key in edits) {
         edits[key][0].style.display = 'none';
         edits[key][1].style.display = 'none';
+        edits[key][2].style.display = 'none';
         const data = {
             id: key,
             name: edits[key][0].value,
@@ -62,8 +64,37 @@ function saveGames() {
 }
 
 function addGame() {
-
+    $('#addGameModal').modal('show');
 }
+
+function saveNewGame() {
+    $('#addGameModal').modal('hide');
+    const data = {
+        mode: 'create',
+        name: document.getElementById('new-game-name').value,
+        link: document.getElementById('new-game-url').value
+    }
+    $.post('assets/php/gameSelect.php', data, function (data, status) {
+        console.log(`${data} and status is ${status}`);
+        document.getElementById('new-game-name').value = '';
+        document.getElementById('new-game-url').value = '';
+        saveGames();
+        loadGames();
+    })
+}
+
+function deleteGame(id) {
+    const data = {
+        mode: 'delete',
+        id: id
+    }
+    $.post('assets/php/gameSelect.php', data, function (data, status) {
+        console.log(`${data} and status is ${status}`);
+        saveGames();
+        loadGames();
+    })
+}
+
 function loadGames() {
     $.getJSON('assets/php/gameSelect.php', function (data) {
         game_list.innerHTML = '';
@@ -74,21 +105,28 @@ function loadGames() {
             var div = document.createElement('div');
             var edit_text = document.createElement('input');
             var edit_link = document.createElement('input');
+            var deleteButton = document.createElement('button');
 
-            //edits.push(edit_link);
-            //edits.push(edit_text);
-            edits[data[i].GameID] = [edit_text, edit_link];
+            edits[data[i].GameID] = [edit_text, edit_link, deleteButton];
 
             show.push(link);
             show.push(text);
 
             div.classList.add('row');
 
+            deleteButton.classList.add('btn', 'border-0');
+            deleteButton.style.display = 'none';
+            deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+            deleteButton.id = data[i].GameID;
+            deleteButton.onclick = function () { deleteGame(this.id) };
+            deleteButton.style.width = '10%';
+
             edit_text.value = data[i].Name;
             edit_text.classList.add('form-control');
             edit_text.style.display = 'none';
             edit_text.placeholder - 'Name';
             edit_text.style.width = '40%';
+            edit_text.style.marginLeft = '15px';
 
             edit_link.value = data[i].URL;
             edit_link.classList.add('form-control');
@@ -96,6 +134,7 @@ function loadGames() {
             edit_link.placeholder = 'Link';
             edit_link.style.width = '40%';
             edit_link.style.marginLeft = 'auto';
+            edit_link.style.marginRight = '60px';
 
             link.classList.add('btn', 'float-end', 'rounded-circle', 'border-0');
             link.href = data[i].URL;
@@ -107,6 +146,7 @@ function loadGames() {
             li.appendChild(text);
             div.appendChild(edit_text);
             div.appendChild(edit_link);
+            div.appendChild(deleteButton);
             li.appendChild(div);
             game_list.appendChild(li);
         }
