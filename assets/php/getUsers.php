@@ -26,8 +26,10 @@ if(isset($_GET['id'])){
             }
 
             $array = ["img"=>$image];
-
+            header('Content-Type: application/json');
             echo json_encode($array);
+            http_response_code(200);
+            die();
         }
     }else{
         $res= $conn->query("SELECT Vorname,Nachname,Username,Email,Addresse,Stadt,Land,Gesperrt FROM User WHERE Admin = '0' AND UserID = ".$_GET['id'].";");
