@@ -65,7 +65,7 @@ function loadData() {
     });
     $.ajax({
         type: "get",
-        url: 'assets/php/getUsers',
+        url: 'assets/php/getUsers.php',
         data: {
             img: "1"
         },
