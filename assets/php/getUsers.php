@@ -26,7 +26,7 @@ if(isset($_GET['id'])){
             }
 
             $array = ["img"=>$image];
-            header('Content-Type: application/json');
+            //header('Content-Type: application/json');
             echo json_encode($array);
             http_response_code(200);
             die();

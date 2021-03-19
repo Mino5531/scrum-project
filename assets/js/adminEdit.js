@@ -78,7 +78,7 @@ function loadData() {
                 return
             }
             //DisplayImage(data.img);
-            if (image == null) {
+            if (data.img == null) {
                 $("#imga").attr("src", "assets/img/dogs/image2.jpeg")
             }
             else {
