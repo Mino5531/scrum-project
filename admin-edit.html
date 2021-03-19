@@ -137,7 +137,7 @@ if(!isset($_GET["id"])){
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small" id="username"></span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small" id="username"></span><img class="border rounded-circle img-profile" src="" id="img-profile"></a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="profile.html"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a>
                                         <div class="dropdown-divider"></div><a class="dropdown-item" href="logout.html"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
                                     </div>
@@ -162,7 +162,7 @@ if(!isset($_GET["id"])){
                         <div class="col-lg-4">
                             <div class="card mb-3">
                                 <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4"
-                                        src="assets/img/dogs/image2.jpeg" width="160" height="160">
+                                        src="" width="160" height="160" id="img">
                                     <div class="mb-3"><button class="btn btn-primary btn-sm" type="button">Change
                                             Picture</button></div>
                                 </div>
@@ -317,6 +317,8 @@ if(!isset($_GET["id"])){
     <script src="assets/js/get.js"></script>
     <script src="assets/js/adminEdit.js"></script>
     <script src="assets/js/site.js"></script>
+    <script src="assets/js/update_img_profile.js"></script>
+
 </body>
 
 </html>
