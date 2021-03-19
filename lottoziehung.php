@@ -1,10 +1,37 @@
+<?php
+	session_start();
+    if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
+        header('location: login.html');
+    }
+#Verbindung mit der Datenbank
+$conn = mysqli_connect("127.0.0.1","swpuser","swpuser","swp");
+if(mysqli_connect_errno()){
+    die("DB Connection-Error please contact the server admin");
+}
+
+	# x wird in diesem Code als hochzählbare Variable für for-Schleifen genutzt
+
+	$Zahl1 = $_POST["zahl1"];
+	$Zahl2 = $_POST["zahl2"];
+	$Zahl3 = $_POST["zahl3"];
+	$Zahl4 = $_POST["zahl4"];
+	$Zahl5 = $_POST["zahl5"];
+	$Zahl6 = $_POST["zahl6"];
+	
+	$getippteZahlen = [$Zahl1, $Zahl2, $Zahl3, $Zahl4, $Zahl5, $Zahl6] ;
+	$alleRichtige = [];
+	$Ende = false;
+	$gewonnenerPreis = 0;
+	
+	$SESSION_userID = $_SESSION['user-id'];
+?>
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Page Not Found - Sloterino</title>
+    <title> Lottery 6/49  - Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
@@ -25,9 +52,17 @@
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-gamepad"></i><span>Games</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i class="fas fa-user"></i><span>Profile</span></a></li>
-                    <li class="nav-item"></li>
-                    <li class="nav-item"></li>
-                    <li class="nav-item"></li>
+                    <?php 
+                    $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
+                    $res = $conn->query($sql);
+                    if($res->num_rows > 0){
+                        if($res->fetch_assoc()["Admin"] == 1){
+                            echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
+                        }
+                    }else{
+                        die("Invalid or no userID");
+                    }
+                    ?>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>
@@ -74,6 +109,7 @@
                                     </div>
                                 </div>
                             </li>
+                            <!-- balance and username -->
                             <li class="nav-item dropdown no-arrow mx-1">
                                 <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: rgb(84,85,96);" id="balance"></a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
@@ -94,18 +130,169 @@
                                     </div>
                                 </div>
                             </li>
+                            <!-- end balance and username -->
                         </ul>
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <div class="text-center mt-5">
-                        <div class="error mx-auto" data-text="404">
-                            <p class="m-0">404</p>
-                        </div>
-                        <p class="text-dark mb-5 lead">Page Not Found</p>
-                        <p class="text-black-50 mb-0">Hmmm... are you sure you didn't enter anything wrong?</p><a href="profile.html">← Back to Profile</a>
-                    </div>
+                    <h3 class="text-dark mb-1">Lottery draw</h3>
+                    
+                    <?php
+                    #Überprüfung Doppelte
+					$set = [];
+					foreach ($getippteZahlen as $zahl)
+					{
+						if (in_array($zahl, $set)) 
+						{
+							echo("Your selected numbers were not unique. Please select again.");
+							$Ende = true;
+							break;
+						}
+						
+						else 
+						{
+							$set[] = $zahl; 
+						}
+					}
+
+					
+					if ($Ende == false) #falls keine Zahl doppelt war
+					{
+								
+						#Zufallszahlen
+						$alleZahlen = range (1,49);
+						shuffle ($alleZahlen);
+						
+						$lottoZahlen = array_slice($alleZahlen, 0,6);
+						sort($lottoZahlen);
+						
+						echo "The lottery numbers are: <BR>";
+						for ($x = 0; $x < 6; $x++  )
+						{
+							echo "$lottoZahlen[$x]   ";
+						}
+
+						#Überprüfung der Übereinstimmungen
+						for($x=0; $x<6; $x++)
+						{
+							if(in_array($getippteZahlen[$x] ,$lottoZahlen))
+							{
+							array_push ($alleRichtige, $getippteZahlen[$x]);
+							}
+						}
+						
+						#Ausgabe der Richtigen
+						if (count($alleRichtige) >  0)
+						{
+							echo ("<BR><BR> Your matches:<BR>");
+					
+						
+							for ($x=0; $x<count($alleRichtige); $x++)
+							{
+								echo ("$alleRichtige[$x] ");
+							}
+
+							#Preisberechnung
+							$qgewinn = "SELECT Gewinn FROM Game WHERE GameID = 2";
+						  
+							$Hauptgewinn= mysqli_query($conn, $qgewinn);
+						  
+									$row = mysqli_fetch_assoc($Hauptgewinn); 
+									if(!$row) {
+										echo "no rows\n";
+									}
+									$gewinn = $row["Gewinn"];
+											
+							
+							if (count($alleRichtige) ==  2)
+							{
+								$gewonnenerPreis = $gewinn / 62500; 
+							}
+							
+							if (count($alleRichtige) ==  3)
+							{
+								$gewonnenerPreis = $gewinn / 15625;
+							}
+							
+							if (count($alleRichtige) ==  4)
+							{
+								$gewonnenerPreis = $gewinn / 2000;
+							}
+							
+							if (count($alleRichtige) ==  5)
+							{
+								$gewonnenerPreis = $gewinn / 50;
+							}
+							
+							if (count($alleRichtige) ==  6)
+							{
+								$gewonnenerPreis = $gewinn;
+							}
+							
+							if (count($alleRichtige) > 1)
+							{
+							echo ("<BR> <BR> You won $gewonnenerPreis $!");
+							}	
+						}
+						
+						if ((count($alleRichtige)) ==0 or (count($alleRichtige)) ==1 )
+						{
+								echo ("<BR> <BR>Unfortunately you did not win anything!");
+						}
+					
+						
+						#Kontostand aktualisieren
+						$qKonto = " SELECT Kontostand FROM User WHERE UserID = $SESSION_userID ";
+						$resKonto= mysqli_query($conn, $qKonto);
+								
+								$row = mysqli_fetch_assoc($resKonto); 
+								if(!$row) {
+									echo "no rows\n";
+								}
+								$Kontostand = $row["Kontostand"];
+								
+						$qEinsatz = " SELECT Mindesteinsatz FROM Game WHERE GameID = 2";
+						$resEinsatz= mysqli_query($conn, $qEinsatz);
+								
+								$row = mysqli_fetch_assoc($resEinsatz); 
+								if(!$row) {
+									echo "no rows\n";
+								}
+								$Einsatz = $row["Mindesteinsatz"];
+								
+								$neuerKontostand = $Kontostand - $Einsatz + $gewonnenerPreis;
+								
+						
+						$qneuerStand = "UPDATE User SET `Kontostand` =$neuerKontostand WHERE UserID = $SESSION_userID";
+					 
+						$Einsatz= mysqli_query($conn, $qneuerStand);	
+						
+						#PaymentHistory-Eintrag hinzufügen
+						$datum = date('Y-m-d H:i:s');
+						
+						$betrag =  $gewonnenerPreis - $Einsatz;
+								
+		
+						$qHistory = "INSERT INTO `paymenthistory`( `Datum`, `Betrag`, `Typ`, `UserID`,`GameID` ) VALUES ('$datum','$betrag','Lotto', $SESSION_userID, 2)";	
+						$resHistory= mysqli_query($conn, $qHistory);		
+						
+						}		
+
+
+
+?>	
+
+<BR>
+<BR>
+<BR>
+<BR>
+
+<A HREF="lotto.html" NAME="x">select new numbers</A>
+</BODY>
+
+
                 </div>
+                
             </div>
             <footer class="bg-white sticky-footer">
                 <div class="container my-auto">
@@ -116,9 +303,9 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="assets/js/site.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
-    <script src="assets/js/site.js"></script>
 </body>
 
 </html>

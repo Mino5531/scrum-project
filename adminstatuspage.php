@@ -1,16 +1,30 @@
-<?php 
+<?php
 session_start();
+$functionaldb = true;
+
 if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
     header('location: login.html');
-} ?>
-<!--slots.html-->
+}
+$link = mysqli_connect("127.0.0.1", "swpuser", "swpuser", "swp");
+$conn = mysqli_connect("127.0.0.1", "swpuser", "swpuser", "swp");
+if ($link === false){
+    $functionaldb = false;
+}
+
+$sqlt = "SELECT COUNT(UserID) AS Usercount From User";
+$result = mysqli_query($link, $sqlt);
+$row = mysqli_fetch_assoc($result);
+
+$numusers = $row["Usercount"];
+
+?>
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Slot Game - Sloterino</title>
+    <title>Games - Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
@@ -19,6 +33,7 @@ if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
     <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
     <link rel="stylesheet" href="assets/css/profile.css">
     <link rel="stylesheet" href="assets/css/untitled.css">
+    <link rel="stylesheet" href="assets/css/message.css">
 </head>
 
 <body id="page-top">
@@ -35,19 +50,20 @@ if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
                                 class="fa fa-gamepad"></i><span>Games</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i
                                 class="fas fa-user"></i><span>Profile</span></a></li>
-                    <?php 
-                                require("assets/php/inc.php");
-                                $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
-                                $res = mysqli_query($conn, $sql);
-                                if(mysqli_num_rows($res) > 0){
-                                    if(mysqli_fetch_assoc($res)["Admin"] == 1){
-                                        echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
-                                        echo('<li class="nav-item"><a class="nav-link" href="adminstatuspage.php"><i class="fas fa-exclamation-circle"></i><span>Status</span></a></li>');
+                                <?php 
+                                    $sql = "SELECT Admin FROM User WHERE UserID = ".$_SESSION['user-id'];
+                                    $res = $conn->query($sql);
+                                    if($res->num_rows > 0){
+                                        if($res->fetch_assoc()["Admin"] == 1){
+                                            echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
+                                            echo('<li class="nav-item"><a class="nav-link active" href="adminstatuspage.php"><i class="fas fa-exclamation-circle"></i><span>Status</span></a></li>');
+                                        }else{
+                                            header("Location: profile.html");
+                                        }
+                                    }else{
+                                        die("Invalid or no userID");
                                     }
-                                }else{
-                                    die("Invalid or no userID");
-                                }
-                                ?>
+                    ?>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0"
                         id="sidebarToggle" type="button"></button></div>
@@ -108,7 +124,6 @@ if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
                                     </div>
                                 </div>
                             </li>
-                            <!-- balance and username -->
                             <li class="nav-item dropdown no-arrow mx-1">
                                 <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: rgb(84,85,96);" id="balance"></a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
@@ -123,42 +138,41 @@ if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small" id="username"></span><img class="border rounded-circle img-profile" src="" id="img-profile"></a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small" id="username"></span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="profile.html"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a>
                                         <div class="dropdown-divider"></div><a class="dropdown-item" href="logout.html"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
                                     </div>
                                 </div>
                             </li>
-                            <!-- end balance and username -->
                         </ul>
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-1">Slots</h3>
+                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                        <h3 class="text-dark mb-0">Admin Status Page</h3>
+                    </div>
+                    <div class="success" id=success-dlg
+                    <?php if ($functionaldb === false){
+                        echo("style = 'display: none'");
+                    } ?>>
+                        <strong>All Systems Operational</strong>
+                    </div>
+                    <div class="row">
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>Usercount</strong> <span class="text-success float-end"><?php echo($numusers);?></span></li>
+                            <li class="list-group-item"><strong>Database</strong> <span class="<?php echo($functionaldb ? "text-success" : "text-danger"); ?> float-end">
+                                <?php 
 
-                    <p> Slots drehen, um zu gewinnen! </p>
-                    <p> Ihr Gewinn ist abh&auml;ngig davon, wie viele gleiche Symbole Sie ziehen </p>
-
-                    </br>
-
-                    <p> 1. Slot </p>
-                    <p> --- </p>
-                    </br>
-
-                    <p> 2. Slot </p>
-                    <p> --- </p>
-                    </br>
-
-                    <p> 3. Slot </p>
-                    <p> --- </p>
-                    </br>
-
-                    </br> </br>
-
-                    <FORM ACTION="slots.php" METHOD=POST>
-                        <input type=submit value="Slots drehen">
-                    </FORM>
-
+                                if ($functionaldb === false){
+                                    echo("Disfunctional");
+                                }else{
+                                    echo("Operational");
+                                }
+                                ?>
+                                </span></li>
+                            <li class="list-group-item"><strong>Webserver</strong> <span class="text-success float-end">Operational</span></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <footer class="bg-white sticky-footer">
@@ -166,14 +180,15 @@ if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
                     <div class="text-center my-auto copyright"><span>Copyright © Sloterino 2021</span></div>
                 </div>
             </footer>
-        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+        </div>
     </div>
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="assets/js/site.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
+    <script src="assets/js/index.js"></script>
+    <script src="assets/js/site.js"></script>
 </body>
 
 </html>

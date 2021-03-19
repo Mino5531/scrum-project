@@ -2,15 +2,19 @@
 session_start();
 if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
     header('location: login.html');
-} ?>
-<!--slots.html-->
+} 
+$conn = mysqli_connect("127.0.0.1","swpuser","swpuser","swp");
+if(mysqli_connect_errno()){
+    die("DB Connection-Error please contact the server admin");
+}
+?>
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Slot Game - Sloterino</title>
+    <title>Lottery 6/49 - Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
@@ -36,11 +40,10 @@ if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i
                                 class="fas fa-user"></i><span>Profile</span></a></li>
                     <?php 
-                                require("assets/php/inc.php");
                                 $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
-                                $res = mysqli_query($conn, $sql);
-                                if(mysqli_num_rows($res) > 0){
-                                    if(mysqli_fetch_assoc($res)["Admin"] == 1){
+                                $res = $conn->query($sql);
+                                if($res->num_rows > 0){
+                                    if($res->fetch_assoc()["Admin"] == 1){
                                         echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
                                         echo('<li class="nav-item"><a class="nav-link" href="adminstatuspage.php"><i class="fas fa-exclamation-circle"></i><span>Status</span></a></li>');
                                     }
@@ -73,41 +76,6 @@ if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
                                     </form>
                                 </div>
                             </li>
-                            <li class="nav-item dropdown no-arrow mx-1">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
-                                        aria-expanded="false" data-bs-toggle="dropdown" href="#"></a>
-                                    <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
-                                        <h6 class="dropdown-header">alerts center</h6><a
-                                            class="dropdown-item d-flex align-items-center" href="#">
-                                            <div class="me-3">
-                                                <div class="bg-primary icon-circle"><i
-                                                        class="fas fa-file-alt text-white"></i></div>
-                                            </div>
-                                            <div><span class="small text-gray-500">December 12, 2019</span>
-                                                <p>A new monthly report is ready to download!</p>
-                                            </div>
-                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
-                                            <div class="me-3">
-                                                <div class="bg-success icon-circle"><i
-                                                        class="fas fa-donate text-white"></i></div>
-                                            </div>
-                                            <div><span class="small text-gray-500">December 7, 2019</span>
-                                                <p>$290.29 has been deposited into your account!</p>
-                                            </div>
-                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
-                                            <div class="me-3">
-                                                <div class="bg-warning icon-circle"><i
-                                                        class="fas fa-exclamation-triangle text-white"></i></div>
-                                            </div>
-                                            <div><span class="small text-gray-500">December 2, 2019</span>
-                                                <p>Spending Alert: We've noticed unusually high spending for your
-                                                    account.</p>
-                                            </div>
-                                        </a><a class="dropdown-item text-center small text-gray-500" href="#">Show All
-                                            Alerts</a>
-                                    </div>
-                                </div>
-                            </li>
                             <!-- balance and username -->
                             <li class="nav-item dropdown no-arrow mx-1">
                                 <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: rgb(84,85,96);" id="balance"></a>
@@ -134,32 +102,39 @@ if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-1">Slots</h3>
+                    <h3 class="text-dark mb-1">Select your lottery numbers!</h3>
 
-                    <p> Slots drehen, um zu gewinnen! </p>
-                    <p> Ihr Gewinn ist abh&auml;ngig davon, wie viele gleiche Symbole Sie ziehen </p>
+                    <BODY>
 
-                    </br>
+                        Please enter 6 numbers between 1 and 49:
+                        <BR>(each number may occur only once)
 
-                    <p> 1. Slot </p>
-                    <p> --- </p>
-                    </br>
 
-                    <p> 2. Slot </p>
-                    <p> --- </p>
-                    </br>
-
-                    <p> 3. Slot </p>
-                    <p> --- </p>
-                    </br>
-
-                    </br> </br>
-
-                    <FORM ACTION="slots.php" METHOD=POST>
-                        <input type=submit value="Slots drehen">
-                    </FORM>
+                        <FORM ACTION="lottoziehung.php" METHOD=POST>
+                            <BR>Number 1:<BR>
+                            <INPUT TYPE="number" NAME="zahl1" VALUE="" MIN="1" MAX="49" required>
+                            <BR>
+                            Number 2:<BR>
+                            <INPUT TYPE="number" NAME="zahl2" VALUE="" MIN="1" MAX="49" required>
+                            <BR>
+                            Number 3:<BR>
+                            <INPUT TYPE="number" NAME="zahl3" VALUE="" MIN="1" MAX="49" required>
+                            <BR>
+                            Number 4:<BR>
+                            <INPUT TYPE="number" NAME="zahl4" VALUE="" MIN="1" MAX="49" required>
+                            <BR>
+                            Number 5:<BR>
+                            <INPUT TYPE="number" NAME="zahl5" VALUE="" MIN="1" MAX="49" required>
+                            <BR>
+                            Number 6:<BR>
+                            <INPUT TYPE="number" NAME="zahl6" VALUE="" MIN="1" MAX="49" required>
+                            <BR>
+                            <BR>
+                            <INPUT TYPE="submit" NAME="submit" VALUE="Start lottery draw">
+                        </FORM>
 
                 </div>
+
             </div>
             <footer class="bg-white sticky-footer">
                 <div class="container my-auto">
@@ -168,8 +143,7 @@ if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
             </footer>
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="assets/js/site.js"></script>
     <script src="assets/js/games.js"></script>
