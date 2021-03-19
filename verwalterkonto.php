@@ -1,10 +1,24 @@
+<?php
+    session_start();
+    
+    require ("inc.php");
+    $mysqlconnection = mysqli_connect($host,$user,$passwd,$datenbank) or 
+    die("Die Datenbank ist momentan nicht erreichbar! ");
+    
+    $_SESSION['userID'] = 1;
+	$SESSION_userID = $_SESSION['userID'] ;
+    
+    #Datenausgabe
+	$qry = " SELECT UserID,Vorname,Nachname, Username,Email,Passwort FROM User WHERE UserID = $SESSION_userID  ";
+	$result= mysqli_query($mysqlconnection, $qry);
+?>
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Page Not Found - Sloterino</title>
+    <title>Verwalterkonto - Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
@@ -74,6 +88,7 @@
                                     </div>
                                 </div>
                             </li>
+                            <!-- balance and username -->
                             <li class="nav-item dropdown no-arrow mx-1">
                                 <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: rgb(84,85,96);" id="balance"></a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
@@ -94,18 +109,53 @@
                                     </div>
                                 </div>
                             </li>
+                            <!-- end balance and username -->
                         </ul>
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <div class="text-center mt-5">
-                        <div class="error mx-auto" data-text="404">
-                            <p class="m-0">404</p>
-                        </div>
-                        <p class="text-dark mb-5 lead">Page Not Found</p>
-                        <p class="text-black-50 mb-0">Hmmm... are you sure you didn't enter anything wrong?</p><a href="profile.html">← Back to Profile</a>
-                    </div>
+                    <h3 class="text-dark mb-1">Verwalterkonto</h3>
+                    <?php
+						#Kontodaten ausgeben
+						echo "<TABLE border=1>
+							 <TR>
+							   <TH>Vorname</TH>
+							   <TH>Nachname</TH>
+							   <TH>Username</TH>
+							   <TH>Email</TH>
+							  </TR>";
+							  $arr = ["Vorname","Nachname","Username","Email"];
+							while($row = mysqli_fetch_assoc($result)) {
+							  echo ("<TR>");
+							  for($i = 0; $i <4; ++$i) {
+								  $temp = $arr[$i];
+								  echo("<TD> $row[$temp] </TD>");  
+							}
+
+						}
+						echo ("</TABLE>");
+						?>
+						
+						<BR><BR><BR>
+						<P>Wollen Sie Ihre Daten bearbeiten?</P>
+
+						<FORM ACTION="verwalterbearbeitung.php" METHOD=POST>
+						  Vorname:<BR> <INPUT TYPE=text NAME="vorname" SIZE=10 MAXLENGTH=45>
+						  <BR>
+						  Nachname:<BR> <INPUT TYPE=text NAME="nachname" SIZE=10 MAXLENGTH=45>
+						  <BR>
+						  Username: <BR><INPUT TYPE=text NAME="username" SIZE=10 MAXLENGTH=45>
+						  <BR>
+						  Email:<BR> <INPUT TYPE=text NAME="email" SIZE=10 MAXLENGTH=45>
+						  <BR>
+						  Passwort:<BR> <INPUT TYPE="password" id="pass" name="passwort">
+						  <BR>
+						  <BR>
+						<INPUT TYPE=submit NAME="Submit" VALUE="Ändern">
+						</FORM>
+
                 </div>
+                
             </div>
             <footer class="bg-white sticky-footer">
                 <div class="container my-auto">
@@ -115,10 +165,8 @@
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
-    <script src="assets/js/site.js"></script>
 </body>
 
 </html>

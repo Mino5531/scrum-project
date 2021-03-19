@@ -1,10 +1,58 @@
+<?php
+	session_start();
+	
+	require ("inc.php");
+	$mysqlconnection = mysqli_connect($host,$user,$passwd,$datenbank) or 
+    die("Die Datenbank ist momentan nicht erreichbar! ");
+    
+    
+	$vorname = $_POST["vorname"];
+	$nachname = $_POST["nachname"];
+	$username = $_POST["username"];
+	$email = $_POST["email"];
+	$passwort = $_POST["passwort"];
+	
+	$SESSION_userID = $_SESSION['user-id'];
+	#$SESSION_userID = 1;
+	
+	#Überprüfen auf Bedarf der Aktualisierung
+	if ($_POST["vorname"]!= NULL) 
+	{
+		$qvorname = "UPDATE `user` SET `Vorname`= '$vorname' WHERE `UserID` = $SESSION_userID";
+		$resvorname= mysqli_query($mysqlconnection, $qvorname);
+	}
+	
+	if ($_POST["nachname"]!= NULL)
+	{
+		$qnachname = "UPDATE user SET `Nachname` ='$nachname' WHERE UserID = $SESSION_userID";
+		$resnachname= mysqli_query($mysqlconnection, $qnachname);
+	}
+	
+	if  ($_POST["username"]!= NULL)
+	{
+		$qusername = "UPDATE user SET `Username` ='$username' WHERE UserID = $SESSION_userID";
+		$resusername= mysqli_query($mysqlconnection, $qusername);
+	}
+	
+	if  ($_POST["email"]!= NULL) 
+	{
+		$qemail = "UPDATE user SET `Email` ='$email' WHERE UserID = $SESSION_userID";
+		$resemail= mysqli_query($mysqlconnection, $qemail);
+	}
+	
+	if  ($_POST["passwort"]!= NULL)
+	{
+		$qpasswort = "UPDATE user SET `Passwort` ='$passwort' WHERE UserID = $SESSION_userID";
+		$respasswort= mysqli_query($mysqlconnection, $qpasswort);
+	}
+?>
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Page Not Found - Sloterino</title>
+    <title>Verwalterkonto- Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
@@ -74,6 +122,7 @@
                                     </div>
                                 </div>
                             </li>
+                            <!-- balance and username -->
                             <li class="nav-item dropdown no-arrow mx-1">
                                 <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: rgb(84,85,96);" id="balance"></a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
@@ -94,18 +143,17 @@
                                     </div>
                                 </div>
                             </li>
+                            <!-- end balance and username -->
                         </ul>
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <div class="text-center mt-5">
-                        <div class="error mx-auto" data-text="404">
-                            <p class="m-0">404</p>
-                        </div>
-                        <p class="text-dark mb-5 lead">Page Not Found</p>
-                        <p class="text-black-50 mb-0">Hmmm... are you sure you didn't enter anything wrong?</p><a href="profile.html">← Back to Profile</a>
-                    </div>
+                    <h3 class="text-dark mb-1">Verwalterkonto</h3>
+                    <P> Ihre Daten wurden aktualisiert!</P>
+                    <A HREF="verwalterkonto.php" NAME="x">Zurück Ihrem Konto</A>
+
                 </div>
+                
             </div>
             <footer class="bg-white sticky-footer">
                 <div class="container my-auto">
@@ -115,10 +163,8 @@
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
-    <script src="assets/js/site.js"></script>
 </body>
 
 </html>

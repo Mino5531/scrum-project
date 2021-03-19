@@ -24,7 +24,6 @@ if(mysqli_connect_errno()){
 	$gewonnenerPreis = 0;
 	
 	$SESSION_userID = $_SESSION['user-id'];
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -125,7 +124,7 @@ if(mysqli_connect_errno()){
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small" id="username"></span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small" id="username"></span><img class="border rounded-circle img-profile" src="" id="img-profile"></a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="profile.html"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a>
                                         <div class="dropdown-divider"></div><a class="dropdown-item" href="logout.html"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
                                     </div>
@@ -252,7 +251,7 @@ if(mysqli_connect_errno()){
 								}
 								$Kontostand = $row["Kontostand"];
 								
-						$qEinsatz = " SELECT Mindesteinsatz FROM Game WHERE GameId = 2";
+						$qEinsatz = " SELECT Mindesteinsatz FROM Game WHERE GameID = 2";
 						$resEinsatz= mysqli_query($mysqlconnection, $qEinsatz);
 								
 								$row = mysqli_fetch_assoc($resEinsatz); 

@@ -1,11 +1,21 @@
-<?php 
+<?php
 session_start();
+$functionaldb = true;
+
 if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
-    header('location: login.html');}
-$conn = mysqli_connect("127.0.0.1","swpuser","swpuser","swp");
-if(mysqli_connect_errno()){
-    die("DB Connection-Error please contact the server admin");
+    header('location: login.html');
+
+$link = mysqli_connect("localhost", "root", "", "swp");
+if ($link === false){
+    $functionaldb = false;
 }
+
+$sql = "SELECT COUNT(UserID) AS Usercount From user";
+$result = mysqli_query($link, $sql);
+$row = mysqli_fetch_assoc($result);
+
+$numusers = $row["Usercount"];
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -13,7 +23,7 @@ if(mysqli_connect_errno()){
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Table - Sloterino</title>
+    <title>Games - Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
@@ -22,6 +32,7 @@ if(mysqli_connect_errno()){
     <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
     <link rel="stylesheet" href="assets/css/profile.css">
     <link rel="stylesheet" href="assets/css/untitled.css">
+    <link rel="stylesheet" href="assets/css/message.css">
 </head>
 
 <body id="page-top">
@@ -34,24 +45,22 @@ if(mysqli_connect_errno()){
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link" href="index.html"><i
+                    <li class="nav-item"><a class="nav-link active" href="index.html"><i
                                 class="fa fa-gamepad"></i><span>Games</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i
                                 class="fas fa-user"></i><span>Profile</span></a></li>
                     <?php 
-                    $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
-                    $res = $conn->query($sql);
-                    if($res->num_rows > 0){
-                        if($res->fetch_assoc()["Admin"] == 1){
-                            echo('<li class="nav-item"><a class="nav-link active" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
-                            echo('<li class="nav-item"><a class="nav-link" href="adminstatuspage.php"><i class="fas fa-exclamation-circle"></i><span>Status</span></a></li>');
-                        }else{
-                            header("Location: profile.html");
-                        }
-                    }else{
-                        die("Invalid or no userID");
-                    }
-                    ?>
+                                $sql = "SELECT Admin FROM user WHERE UserID = ". $_SESSION['user-id'];
+                                $res = $conn->query($sql);
+                                if($res->num_rows > 0){
+                                    if($res->fetch_assoc()["Admin"] == 1){
+                                        echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
+                                        echo('<li class="nav-item"><a class="nav-link" href="adminstatuspage.php"><i class="fas fa-exclamation-circle"></i><span>Status</span></a></li>');
+                                    }
+                                }else{
+                                    die("Invalid or no userID");
+                                }
+                                ?>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0"
                         id="sidebarToggle" type="button"></button></div>
@@ -112,7 +121,6 @@ if(mysqli_connect_errno()){
                                     </div>
                                 </div>
                             </li>
-                            <!-- balance and username -->
                             <li class="nav-item dropdown no-arrow mx-1">
                                 <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: rgb(84,85,96);" id="balance"></a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
@@ -127,96 +135,40 @@ if(mysqli_connect_errno()){
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small" id="username"></span><img class="border rounded-circle img-profile" src="" id="img-profile"></a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small" id="username"></span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="profile.html"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a>
                                         <div class="dropdown-divider"></div><a class="dropdown-item" href="logout.html"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
                                     </div>
                                 </div>
                             </li>
-                            <!-- end balance and username -->
                         </ul>
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-4">Users</h3>
-                    <div class="card shadow">
-                        <div class="card-header py-3">
-                            <p class="text-primary m-0 fw-bold">User Info</p>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 text-nowrap">
-                                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                                        <label class="form-label">Show&nbsp;<select id="dataTable_select"
-                                                class="d-inline-block form-select form-select-sm">
-                                                <option value="10" selected="">10</option>
-                                                <option value="25">25</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                            </select>&nbsp;</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="text-md-end dataTables_filter" id="dataTable_filter"><label
-                                            class="form-label"><input type="search" class="form-control form-control-sm"
-                                                aria-controls="dataTable" placeholder="Search"></label></div>
-                                </div>
-                            </div>
-                            <div class="table-responsive table mt-2" id="dataTable" role="grid"
-                                aria-describedby="dataTable_info">
-                                <table class="table my-0" id="dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Country</th>
-                                            <th>Balance</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!--<tr>
-                                            <td><img class="rounded-circle me-2" width="30" height="30" src="assets/img/avatars/avatar1.jpeg">Airi Satou</td>
-                                            <td>Accountant</td>
-                                            <td>Tokyo</td>
-                                            <td>33</td>
-                                            <td>2008/11/28</td>
-                                            <td>$162,700</td>
-                                        </tr>-->
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td><strong>Username</strong></td>
-                                            <td><strong>Email</strong></td>
-                                            <td><strong>First Name</strong></td>
-                                            <td><strong>Last Name</strong></td>
-                                            <td><strong>Country</strong></td>
-                                            <td><strong>Balance</strong></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 align-self-center">
-                                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">
-                                        Showing 1 to 10 of 27</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <nav
-                                        class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                                        <ul class="pagination" id="paginator">
-                                            <!--<li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>-->
-                                            <!--<li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">3</a></li>-->
-                                            <!--<li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>-->
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                        <h3 class="text-dark mb-0">Admin Status Page</h3>
+                    </div>
+                    <div class="success" id=success-dlg
+                    <?php if ($functionaldb === false){
+                        echo("style = 'display: none'");
+                    } ?>>
+                        <strong>All Systems Operational</strong>
+                    </div>
+                    <div class="row">
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>Usercount</strong> <span class="text-success float-end"><?php echo($numusers);?></span></li>
+                            <li class="list-group-item"><strong>Database</strong> <span class="<?php echo($functionaldb ? "text-success" : "text-danger"); ?> float-end">
+                                <?php 
+
+                                if ($functionaldb === false){
+                                    echo("Disfunctional");
+                                }else{
+                                    echo("Operational");
+                                }
+                                ?>
+                                </span></li>
+                            <li class="list-group-item"><strong>Webserver</strong> <span class="text-success float-end">Operational</span></li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -225,15 +177,14 @@ if(mysqli_connect_errno()){
                     <div class="text-center my-auto copyright"><span>Copyright © Sloterino 2021</span></div>
                 </div>
             </footer>
-        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+        </div>
     </div>
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="assets/js/get.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
-    <script src="assets/js/adminTable.js"></script>
+    <script src="assets/js/index.js"></script>
     <script src="assets/js/site.js"></script>
 </body>
 

@@ -1,7 +1,8 @@
 <?php 
 session_start();
 if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
-    header('location: login.html');}
+    header('location: login.html');
+} 
 $conn = mysqli_connect("127.0.0.1","swpuser","swpuser","swp");
 if(mysqli_connect_errno()){
     die("DB Connection-Error please contact the server admin");
@@ -13,15 +14,18 @@ if(mysqli_connect_errno()){
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Table - Sloterino</title>
+    <title>Blackjack - Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/profile.css">
     <link rel="stylesheet" href="assets/css/untitled.css">
+    <link rel="stylesheet" href="assets/css/message.css">
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 
 <body id="page-top">
@@ -39,18 +43,16 @@ if(mysqli_connect_errno()){
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i
                                 class="fas fa-user"></i><span>Profile</span></a></li>
                     <?php 
-                    $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
-                    $res = $conn->query($sql);
-                    if($res->num_rows > 0){
-                        if($res->fetch_assoc()["Admin"] == 1){
-                            echo('<li class="nav-item"><a class="nav-link active" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
-                            echo('<li class="nav-item"><a class="nav-link" href="adminstatuspage.php"><i class="fas fa-exclamation-circle"></i><span>Status</span></a></li>');
-                        }else{
-                            header("Location: profile.html");
-                        }
-                    }else{
-                        die("Invalid or no userID");
-                    }
+                                $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
+                                $res = $conn->query($sql);
+                                if($res->num_rows > 0){
+                                    if($res->fetch_assoc()["Admin"] == 1){
+                                        echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
+                                        echo('<li class="nav-item"><a class="nav-link" href="adminstatuspage.php"><i class="fas fa-exclamation-circle"></i><span>Status</span></a></li>');
+                                    }
+                                }else{
+                                    die("Invalid or no userID");
+                                }
                     ?>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0"
@@ -138,84 +140,49 @@ if(mysqli_connect_errno()){
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-4">Users</h3>
-                    <div class="card shadow">
-                        <div class="card-header py-3">
-                            <p class="text-primary m-0 fw-bold">User Info</p>
+                    <div class="success" id="win" style="display: none;">
+                        <strong>Win!</strong> <span id="win-text"></span>
+                    </div>
+                    <div class="alert" id="loss" style="display: none;">
+                        <strong>Loss!</strong> <span id="loss-text"></span>
+                    </div>
+                    <div class="alert" id="insufficient-funds" style="display: none;">
+                        <strong>ERROR!</strong> <span>You cannot bet more than you currently have in your balance</span>
+                    </div>
+                    <div class="alert" id="invalid-bet" style="display: none;">
+                        <strong>ERROR!</strong> <span>Please enter a valid bet</span>
+                    </div>
+                    <h3 class="text-dark mb-1">Blackjack</h3>
+                    <div class="mt-5 row" style="height: 20rem;">
+                        <div class="col-3">
+                            <p id="player-cards" class="mb-5">Your cards:</p>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 text-nowrap">
-                                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                                        <label class="form-label">Show&nbsp;<select id="dataTable_select"
-                                                class="d-inline-block form-select form-select-sm">
-                                                <option value="10" selected="">10</option>
-                                                <option value="25">25</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                            </select>&nbsp;</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="text-md-end dataTables_filter" id="dataTable_filter"><label
-                                            class="form-label"><input type="search" class="form-control form-control-sm"
-                                                aria-controls="dataTable" placeholder="Search"></label></div>
-                                </div>
+                        <div class="col-3">
+                            <p id="bank-cards" class="mb-5">Bank cards</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <p>Your value: <span id="player-value"></span> </p>
+                        </div>
+                        <div class="col-3">
+                            <p>Bank value: <span id="bank-value"></span></p>
+                        </div>
+                    </div>
+                    <div class="form-group mt-5">
+                        <label for="bet" class="mb-1">Your bet (in $):</label>
+                        <input type="text" name="bet" id="bet" class="form-control" style="width:10rem">
+                        <div class="row mt-5" id="buttons">
+                            <div class="col-3">
+                                <button class="btn btn-primary" id="hit" style="width: 100%;">Place bet</button>
+                                <a href="blackjack.html" class="btn btn-success text-white" id="restart"
+                                    style="display: none; width: 100%">Neues Spiel</a>
                             </div>
-                            <div class="table-responsive table mt-2" id="dataTable" role="grid"
-                                aria-describedby="dataTable_info">
-                                <table class="table my-0" id="dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Country</th>
-                                            <th>Balance</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!--<tr>
-                                            <td><img class="rounded-circle me-2" width="30" height="30" src="assets/img/avatars/avatar1.jpeg">Airi Satou</td>
-                                            <td>Accountant</td>
-                                            <td>Tokyo</td>
-                                            <td>33</td>
-                                            <td>2008/11/28</td>
-                                            <td>$162,700</td>
-                                        </tr>-->
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td><strong>Username</strong></td>
-                                            <td><strong>Email</strong></td>
-                                            <td><strong>First Name</strong></td>
-                                            <td><strong>Last Name</strong></td>
-                                            <td><strong>Country</strong></td>
-                                            <td><strong>Balance</strong></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                            <div class="col-3">
+                                <button class="btn btn-primary" id="stand"
+                                    style="display: none;width: 100%;">Stand</button>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 align-self-center">
-                                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">
-                                        Showing 1 to 10 of 27</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <nav
-                                        class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                                        <ul class="pagination" id="paginator">
-                                            <!--<li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>-->
-                                            <!--<li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">3</a></li>-->
-                                            <!--<li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>-->
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
+                            <p id="result-msg" class="mt-5"></p>
                         </div>
                     </div>
                 </div>
@@ -227,14 +194,12 @@ if(mysqli_connect_errno()){
             </footer>
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="assets/js/get.js"></script>
+    <script src="assets/js/site.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
-    <script src="assets/js/adminTable.js"></script>
-    <script src="assets/js/site.js"></script>
+    <script src="assets/js/blackjack.js"></script>
 </body>
 
 </html>
