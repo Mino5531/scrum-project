@@ -4,14 +4,15 @@ $functionaldb = true;
 
 if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
     header('location: login.html');
-
-$link = mysqli_connect("localhost", "root", "", "swp");
+}
+$link = mysqli_connect("127.0.0.1", "swpuser", "swpuser", "swp");
+$conn = mysqli_connect("127.0.0.1", "swpuser", "swpuser", "swp");
 if ($link === false){
     $functionaldb = false;
 }
 
-$sql = "SELECT COUNT(UserID) AS Usercount From user";
-$result = mysqli_query($link, $sql);
+$sqlt = "SELECT COUNT(UserID) AS Usercount From User";
+$result = mysqli_query($link, $sqlt);
 $row = mysqli_fetch_assoc($result);
 
 $numusers = $row["Usercount"];
@@ -45,22 +46,24 @@ $numusers = $row["Usercount"];
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link active" href="index.html"><i
+                    <li class="nav-item"><a class="nav-link" href="index.html"><i
                                 class="fa fa-gamepad"></i><span>Games</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i
                                 class="fas fa-user"></i><span>Profile</span></a></li>
-                    <?php 
-                                $sql = "SELECT Admin FROM user WHERE UserID = ". $_SESSION['user-id'];
-                                $res = $conn->query($sql);
-                                if($res->num_rows > 0){
-                                    if($res->fetch_assoc()["Admin"] == 1){
-                                        echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
-                                        echo('<li class="nav-item"><a class="nav-link" href="adminstatuspage.php"><i class="fas fa-exclamation-circle"></i><span>Status</span></a></li>');
+                                <?php 
+                                    $sql = "SELECT Admin FROM User WHERE UserID = ".$_SESSION['user-id'];
+                                    $res = $conn->query($sql);
+                                    if($res->num_rows > 0){
+                                        if($res->fetch_assoc()["Admin"] == 1){
+                                            echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
+                                            echo('<li class="nav-item"><a class="nav-link active" href="adminstatuspage.php"><i class="fas fa-exclamation-circle"></i><span>Status</span></a></li>');
+                                        }else{
+                                            header("Location: profile.html");
+                                        }
+                                    }else{
+                                        die("Invalid or no userID");
                                     }
-                                }else{
-                                    die("Invalid or no userID");
-                                }
-                                ?>
+                    ?>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0"
                         id="sidebarToggle" type="button"></button></div>

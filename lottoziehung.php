@@ -193,9 +193,9 @@ if(mysqli_connect_errno()){
 							}
 
 							#Preisberechnung
-							$qgewinn = "SELECT Gewinn FROM game WHERE GameID = 2";
+							$qgewinn = "SELECT Gewinn FROM Game WHERE GameID = 2";
 						  
-							$Hauptgewinn= mysqli_query($mysqlconnection, $qgewinn);
+							$Hauptgewinn= mysqli_query($conn, $qgewinn);
 						  
 									$row = mysqli_fetch_assoc($Hauptgewinn); 
 									if(!$row) {
@@ -243,7 +243,7 @@ if(mysqli_connect_errno()){
 						
 						#Kontostand aktualisieren
 						$qKonto = " SELECT Kontostand FROM User WHERE UserID = $SESSION_userID ";
-						$resKonto= mysqli_query($mysqlconnection, $qKonto);
+						$resKonto= mysqli_query($conn, $qKonto);
 								
 								$row = mysqli_fetch_assoc($resKonto); 
 								if(!$row) {
@@ -252,7 +252,7 @@ if(mysqli_connect_errno()){
 								$Kontostand = $row["Kontostand"];
 								
 						$qEinsatz = " SELECT Mindesteinsatz FROM Game WHERE GameID = 2";
-						$resEinsatz= mysqli_query($mysqlconnection, $qEinsatz);
+						$resEinsatz= mysqli_query($conn, $qEinsatz);
 								
 								$row = mysqli_fetch_assoc($resEinsatz); 
 								if(!$row) {
@@ -265,7 +265,7 @@ if(mysqli_connect_errno()){
 						
 						$qneuerStand = "UPDATE User SET `Kontostand` =$neuerKontostand WHERE UserID = $SESSION_userID";
 					 
-						$Einsatz= mysqli_query($mysqlconnection, $qneuerStand);	
+						$Einsatz= mysqli_query($conn, $qneuerStand);	
 						
 						#PaymentHistory-Eintrag hinzufügen
 						$datum = date('Y-m-d H:i:s');
@@ -274,7 +274,7 @@ if(mysqli_connect_errno()){
 								
 		
 						$qHistory = "INSERT INTO `paymenthistory`( `Datum`, `Betrag`, `Typ`, `UserID`,`GameID` ) VALUES ('$datum','$betrag','Lotto', $SESSION_userID, 2)";	
-						$resHistory= mysqli_query($mysqlconnection, $qHistory);		
+						$resHistory= mysqli_query($conn, $qHistory);		
 						
 						}		
 
