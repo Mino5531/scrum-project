@@ -11,7 +11,29 @@ if($res->num_rows != 1){
     die();
 }
 if(isset($_GET['id'])){
-    $res= $conn->query("SELECT Vorname,Nachname,Username,Email,Addresse,Stadt,Land,Gesperrt FROM User WHERE Admin = '0' AND UserID = ".$_GET['id'].";");
+    if(isset($_GET['img'])){
+        $sql = "SELECT Profilbild FROM User WHERE UserID=".$_GET['id'];
+        $result = mysqli_query($conn, $sql);
+
+        if(mysqli_num_rows($result) == 1){
+            $row = mysqli_fetch_assoc($result);
+            $imagedb = $row["Profilbild"];
+            if ($imagedb == null){
+                $image = null;
+            }
+            else{
+                $image = base64_encode($imagedb);
+            }
+
+            $array = ["img"=>$image];
+            //header('Content-Type: application/json');
+            echo json_encode($array);
+            http_response_code(200);
+            die();
+        }
+    }else{
+        $res= $conn->query("SELECT Vorname,Nachname,Username,Email,Addresse,Stadt,Land,Gesperrt FROM User WHERE Admin = '0' AND UserID = ".$_GET['id'].";");
+    }
 }else{
     $res= $conn->query("SELECT UserID,Vorname,Nachname,Username,Email,Kontostand,Land FROM User WHERE Admin = '0';");
 }
