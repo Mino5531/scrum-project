@@ -1,6 +1,7 @@
 $(document).ready(LoadData)
 $(document).ready(CheckLogin)
 const urlSite = "assets/php/site.php"
+var balance;
 
 function LoadData(){
 	LoadBalance()
@@ -45,6 +46,7 @@ function LoadBalance(){
 				return
 			}
 			DisplayBalance(data.balance)
+			balance = data.balance
 			DisplayHistory(data.history)
 		}
 	})
