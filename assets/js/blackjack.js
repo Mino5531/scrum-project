@@ -25,14 +25,14 @@ function StartGame(){
 		$("#invalid-bet").show()
 		setTimeout(function () {
 			$('#invalid-bet').fadeOut('slow');
-		}, 1000);
+		}, 2000);
 		return
 	}
 	if ($("#bet").val() > balance ){
 		$("#insufficient-funds").show()
 		setTimeout(function () {
 			$('#insufficient-funds').fadeOut('slow');
-		}, 1000);
+		}, 2000);
 		return
 	}
 	$("#bet").prop("disabled", true)
@@ -277,13 +277,13 @@ function DisplayOutcome(win, msg){ // win: bool, msg: string
 		$("#win-text").text(msg)
 		setTimeout(function () {
 			$('#win').fadeOut('slow');
-		}, 1000);
+		}, 2000);
 	}
 	else{
 		$("#loss").show()
 		$("#loss-text").text(msg)
 		setTimeout(function () {
 			$('#loss').fadeOut('slow');
-		}, 1000);
+		}, 2000);
 	}
 }
