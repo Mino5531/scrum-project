@@ -67,7 +67,8 @@ function loadData() {
         type: "get",
         url: 'assets/php/getUsers.php',
         data: {
-            img: "1"
+            img: "1",
+            id: userID
         },
         success: function (json) {
             try {
