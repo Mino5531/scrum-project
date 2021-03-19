@@ -12,11 +12,11 @@ or die ("Fehler: " . mysqli_connect_error());
 
 #### USERID MUSS NOCH ZU SESSIONID GEÄNDERT WERDEN
 # Zeile 13 statt 14 verwenden
-# $SESSION_userID = $_SESSION['UserID'];
-$SESSION_userID = 1;
-
+$SESSION_userID = $_SESSION['UserID'];
+# $SESSION_userID = 1;
+$id = 3;
 # Definition des größt möglichen Gewinns
-$qMoeglicherGewinn = "SELECT Gewinn FROM Game WHERE gameID=2";
+$qMoeglicherGewinn = "SELECT Gewinn FROM Game WHERE gameID=$id";
 $resMoeglicherGewinn = mysqli_query($con, $qMoeglicherGewinn);
 
 	 $row = mysqli_fetch_assoc($resMoeglicherGewinn); 
@@ -26,7 +26,7 @@ $resMoeglicherGewinn = mysqli_query($con, $qMoeglicherGewinn);
 	 $moeglicherGewinn = $row["Gewinn"];
 
 # Definition des Einsatzes
-$qEinsatz = "SELECT Mindesteinsatz FROM Game WHERE gameID=2";
+$qEinsatz = "SELECT Mindesteinsatz FROM Game WHERE gameID=$id";
 $resEinsatz = mysqli_query($con, $qEinsatz);
 
 	 $row = mysqli_fetch_assoc($resEinsatz); 
@@ -222,6 +222,14 @@ $resKontostand = mysqli_query($con, $qKontostand);
 						 
 					 $qNeuerKontostand = "UPDATE User SET `Kontostand`=$neuerKontostand WHERE UserID=$SESSION_userID";
 					 mysqli_query($con, $qNeuerKontostand);
+					 
+					 
+					 # hinzufuegen der kontostandaenderung in paymentHistory
+					 # paymentHistory abgekuerzt zurch pH
+					 $date = date('Y-m-d H:i:s');
+					 $betrag = $gewinn - $einsatz;
+					 $qPH = "INSERT INTO `paymenthistory`(`Datum`, `Betrag`, `Typ`, `GameID`, `UserID`) VALUES ('$date', '$betrag', 'Slots', '$id', '$SESSION_userID')";
+					 mysqli_query($con, $qPH);
 					 ?>
                     
                 </div>
