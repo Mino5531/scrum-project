@@ -55,14 +55,23 @@ function UserController(){
 	global $conn;
 	$userId = $_SESSION["user-id"];
 
-	$sql = "SELECT Username FROM User WHERE UserID = $userId";
+	$sql = "SELECT Username, Profilbild FROM User WHERE UserID=$userId";
 	$result = mysqli_query($conn, $sql);
 
 	if(mysqli_num_rows($result) == 1){
 		$row = mysqli_fetch_assoc($result);
 		$username = $row["Username"];
+		$imagedb = $row["Profilbild"];
+		if ($imagedb == null){
+			$image = null;
+		}
+		else{
+			$image = base64_encode($imagedb);
+		}
 
-		echo json_encode($username);
+		$array = ["username"=>$username, "img"=>$image];
+
+		echo json_encode($array);
 	}
 
 	// Falls Profilbilder eingebaut werden sollen müssen sie in dieser Funktion noch ergänzt werden 

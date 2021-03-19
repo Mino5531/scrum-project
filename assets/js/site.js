@@ -1,7 +1,7 @@
 $(document).ready(LoadData)
 $(document).ready(CheckLogin)
 const urlSite = "assets/php/site.php"
-var balance;
+var balance, profileImg;
 
 function LoadData(){
 	LoadBalance()
@@ -15,14 +15,16 @@ function LoadUserData(){
 		data: {
 			controller: "user"
 		},
-		success: function(data){
+		success: function(json){
 			try {
-				var username = JSON.parse(data)
+				var data = JSON.parse(json)
 			} catch(error){
-				JsonParseError(error, data)
+				JsonParseError(error, json)
 				return
 			}
-			DisplayUsername(username)
+			DisplayUsername(data.username)
+			DisplayImage(data.img)
+			profileImg = data.img;
 		}
 	})
 }
@@ -148,4 +150,14 @@ function CheckLogin(){
 			}
 		}
 	})
+}
+
+function DisplayImage(image){
+	if (image == null){
+		return
+	}
+	else{
+		$("#img-profile").attr("src", "data:image/jpeg;base64," + image)
+		$("#img").attr("src", "data:image/jpeg;base64," + image)
+	}
 }
