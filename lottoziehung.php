@@ -4,10 +4,10 @@
         header('location: login.html');
     }
 #Verbindung mit der Datenbank
-require ("inc.php");
-  $mysqlconnection = mysqli_connect($host,$user,$passwd,$datenbank) or 
-    die("Die Datenbank ist momentan nicht erreichbar! ");
-
+$conn = mysqli_connect("127.0.0.1","swpuser","swpuser","swp");
+if(mysqli_connect_errno()){
+    die("DB Connection-Error please contact the server admin");
+}
 
 	# x wird in diesem Code als hochzählbare Variable für for-Schleifen genutzt
 
@@ -24,7 +24,6 @@ require ("inc.php");
 	$gewonnenerPreis = 0;
 	
 	$SESSION_userID = $_SESSION['user-id'];
-	//$SESSION_userID = 1;
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,7 +31,7 @@ require ("inc.php");
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title> Lotto 6aus49  - Sloterino</title>
+    <title> Lottery 6/49  - Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
@@ -136,7 +135,7 @@ require ("inc.php");
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-1">Lottoziehung</h3>
+                    <h3 class="text-dark mb-1">Lottery draw</h3>
                     
                     <?php
                     #Überprüfung Doppelte
@@ -145,7 +144,7 @@ require ("inc.php");
 					{
 						if (in_array($zahl, $set)) 
 						{
-							echo("Ihre ausgewählten Zahlen waren nicht einzigartig. Bitte wählen Sie neu.");
+							echo("Your selected numbers were not unique. Please select again.");
 							$Ende = true;
 							break;
 						}
@@ -167,10 +166,10 @@ require ("inc.php");
 						$lottoZahlen = array_slice($alleZahlen, 0,6);
 						sort($lottoZahlen);
 						
+						echo "The lottery numbers are: <BR>";
 						for ($x = 0; $x < 6; $x++  )
 						{
-							$y = $x +1;
-							echo "Die $y. Lottozahl ist $lottoZahlen[$x] <BR>";
+							echo "$lottoZahlen[$x]   ";
 						}
 
 						#Überprüfung der Übereinstimmungen
@@ -185,7 +184,7 @@ require ("inc.php");
 						#Ausgabe der Richtigen
 						if (count($alleRichtige) >  0)
 						{
-							echo ("</BR>Ihre Richtigen:</BR>");
+							echo ("<BR><BR> Your matches:<BR>");
 					
 						
 							for ($x=0; $x<count($alleRichtige); $x++)
@@ -194,9 +193,9 @@ require ("inc.php");
 							}
 
 							#Preisberechnung
-							$qgewinn = "SELECT Gewinn FROM game WHERE GameID = 1";
+							$qgewinn = "SELECT Gewinn FROM Game WHERE GameID = 2";
 						  
-							$Hauptgewinn= mysqli_query($mysqlconnection, $qgewinn);
+							$Hauptgewinn= mysqli_query($conn, $qgewinn);
 						  
 									$row = mysqli_fetch_assoc($Hauptgewinn); 
 									if(!$row) {
@@ -232,19 +231,19 @@ require ("inc.php");
 							
 							if (count($alleRichtige) > 1)
 							{
-							echo ("<BR> <BR> Sie haben $gewonnenerPreis € gewonnen!");
+							echo ("<BR> <BR> You won $gewonnenerPreis $!");
 							}	
 						}
 						
 						if ((count($alleRichtige)) ==0 or (count($alleRichtige)) ==1 )
 						{
-								echo ("<BR> <BR>Sie haben leider nichts gewonnen!");
+								echo ("<BR> <BR>Unfortunately you did not win anything!");
 						}
-					}
+					
 						
 						#Kontostand aktualisieren
 						$qKonto = " SELECT Kontostand FROM User WHERE UserID = $SESSION_userID ";
-						$resKonto= mysqli_query($mysqlconnection, $qKonto);
+						$resKonto= mysqli_query($conn, $qKonto);
 								
 								$row = mysqli_fetch_assoc($resKonto); 
 								if(!$row) {
@@ -252,8 +251,8 @@ require ("inc.php");
 								}
 								$Kontostand = $row["Kontostand"];
 								
-						$qEinsatz = " SELECT Mindesteinsatz FROM Game WHERE Name = 'Lotto'";
-						$resEinsatz= mysqli_query($mysqlconnection, $qEinsatz);
+						$qEinsatz = " SELECT Mindesteinsatz FROM Game WHERE GameID = 2";
+						$resEinsatz= mysqli_query($conn, $qEinsatz);
 								
 								$row = mysqli_fetch_assoc($resEinsatz); 
 								if(!$row) {
@@ -266,7 +265,18 @@ require ("inc.php");
 						
 						$qneuerStand = "UPDATE User SET `Kontostand` =$neuerKontostand WHERE UserID = $SESSION_userID";
 					 
-						$Einsatz= mysqli_query($mysqlconnection, $qneuerStand);			
+						$Einsatz= mysqli_query($conn, $qneuerStand);	
+						
+						#PaymentHistory-Eintrag hinzufügen
+						$datum = date('Y-m-d H:i:s');
+						
+						$betrag =  $gewonnenerPreis - $Einsatz;
+								
+		
+						$qHistory = "INSERT INTO `paymenthistory`( `Datum`, `Betrag`, `Typ`, `UserID`,`GameID` ) VALUES ('$datum','$betrag','Lotto', $SESSION_userID, 2)";	
+						$resHistory= mysqli_query($conn, $qHistory);		
+						
+						}		
 
 
 
@@ -277,7 +287,7 @@ require ("inc.php");
 <BR>
 <BR>
 
-<A HREF="lotto.html" NAME="x">neue Zahlen auswählen</A>
+<A HREF="lotto.html" NAME="x">select new numbers</A>
 </BODY>
 
 
