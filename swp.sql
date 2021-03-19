@@ -485,6 +485,7 @@ CREATE TABLE IF NOT EXISTS `User` (
   `Addresse` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `Stadt` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `Land` int(11) DEFAULT NULL,
+  `Profilbild` longblob DEFAULT NULL,
   `Gesperrt` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`UserID`),
   KEY `country` (`Land`),

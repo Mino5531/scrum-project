@@ -48,6 +48,7 @@ if(mysqli_connect_errno()){
                                 if($res->num_rows > 0){
                                     if($res->fetch_assoc()["Admin"] == 1){
                                         echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
+                                        echo('<li class="nav-item"><a class="nav-link" href="adminstatuspage.php"><i class="fas fa-exclamation-circle"></i><span>Status</span></a></li>');
                                     }
                                 }else{
                                     die("Invalid or no userID");

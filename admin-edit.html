@@ -54,6 +54,7 @@ if(!isset($_GET["id"])){
                     if($res->num_rows > 0){
                         if($res->fetch_assoc()["Admin"] == 1){
                             echo('<li class="nav-item"><a class="nav-link active" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
+                            echo('<li class="nav-item"><a class="nav-link" href="adminstatuspage.php"><i class="fas fa-exclamation-circle"></i><span>Status</span></a></li>');
                         }else{
                             header("Location: profile.html");
                         }
@@ -123,12 +124,15 @@ if(!isset($_GET["id"])){
                             </li>
                             <!-- balance and username -->
                             <li class="nav-item dropdown no-arrow mx-1">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: rgb(84,85,96);" id="balance"></a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
+                                        aria-expanded="false" data-bs-toggle="dropdown" href="#"
+                                        style="color: rgb(84,85,96);" id="balance"></a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
                                         <h6 class="dropdown-header">Recent Transactions</h6>
                                         <div id="recent-transactions">
                                         </div>
-                                        <a class="dropdown-item text-center small text-gray-500" href="transactions.html">Show all transactions</a>
+                                        <a class="dropdown-item text-center small text-gray-500"
+                                            href="transactions.html">Show all transactions</a>
                                     </div>
                                 </div>
                                 <div class="shadow dropdown-list dropdown-menu dropdown-menu-end"
@@ -161,9 +165,9 @@ if(!isset($_GET["id"])){
                         <div class="col-lg-4">
                             <div class="card mb-3">
                                 <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4"
-                                        src="" width="160" height="160" style="object-fit: cover;" id="img">
-                                    <div class="mb-3"><button class="btn btn-primary btn-sm" type="button">Change
-                                            Picture</button></div>
+                                        src="" width="160" height="160" style="object-fit: cover;" id="imga">
+                                    <div class="mb-3"><!--<button class="btn btn-primary btn-sm" type="button">Change
+                                            Picture</button>--></div>
                                 </div>
                             </div>
                             <div class="card shadow mb-4">
@@ -186,7 +190,8 @@ if(!isset($_GET["id"])){
                                     </div>
                                     <div class="row">
                                         <button type="button" class="btn btn-danger" id="account-promote"
-                                            style="margin-top: 10px; margin-bottom: 10px;">Promote account to admin</button>
+                                            style="margin-top: 10px; margin-bottom: 10px;">Promote account to
+                                            admin</button>
                                     </div>
                                 </div>
                             </div>

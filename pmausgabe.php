@@ -1,60 +1,30 @@
-<!--slots.php-->
+<!--pmausgabe.php-->
 
 <?php
-session_start();
-if(!isset($_SESSION['login_user']) || !isset($_SESSION['user-id'])){
-    header('location: login.html');
-}
-# Verbindung zur Datenbank aufbauen
-require ("inc.php");
-$con = mysqli_connect($host, $user, $passwd, $datenbank)
-or die ("Fehler: " . mysqli_connect_error());
+    session_start();
 
-#### USERID MUSS NOCH ZU SESSIONID GEÄNDERT WERDEN
-# Zeile 13 statt 14 verwenden
-$SESSION_userID = $_SESSION['user-id'];
-# $SESSION_userID = 1;
-$id = 3;
-# Definition des größt möglichen Gewinns
-$qMoeglicherGewinn = "SELECT Gewinn FROM Game WHERE gameID=$id";
-$resMoeglicherGewinn = mysqli_query($con, $qMoeglicherGewinn);
+    require ("inc.php");
+    $mysqlconnection = mysqli_connect($host,$user,$passwd,$datenbank) or 
+    die("Die Datenbank ist momentan nicht erreichbar! ");
 
-	 $row = mysqli_fetch_assoc($resMoeglicherGewinn); 
-	 if(!$row) {
-		echo "no rows\n";
-	 }
-	 $moeglicherGewinn = $row["Gewinn"];
+    $_SESSION['userID'] = 1;
+	$SESSION_userID = $_SESSION['userID'] ;
 
-# Definition des Einsatzes
-$qEinsatz = "SELECT Mindesteinsatz FROM Game WHERE gameID=$id";
-$resEinsatz = mysqli_query($con, $qEinsatz);
-
-	 $row = mysqli_fetch_assoc($resEinsatz); 
-	 if(!$row) {
-		echo "no rows\n";
-	 }
-	 $einsatz = $row["Mindesteinsatz"];
-
-# Definition des alten Kontostands
-$qKontostand = "SELECT Kontostand FROM User WHERE UserID=$SESSION_userID";
-$resKontostand = mysqli_query($con, $qKontostand);
-
-	 $row = mysqli_fetch_assoc($resKontostand); 
-	 if(!$row) {
-		echo "no rows\n";
-	 }
-	 $alterKontostand = $row["Kontostand"];
+    #Datenausgabe
+	$qAusgabe = " SELECT `KartenID`, `Kartennummer`, `Ablaufdatum`, `CVV`, `Rechnungsadresse`, `Rechnungsname`, `Hinzufuegedatum` FROM `paymentmethod` WHERE UserID = $SESSION_userID";
+	$result= mysqli_query($mysqlconnection, $qAusgabe);
+	
+	$qNumberOfRows = "SELECT `KartenID` FROM `paymentmethod` WHERE UserID = $SESSION_userID";
+	$rNumberOfRows = mysqli_query($mysqlconnection, $qNumberOfRows);
+	$resultNumberOfRows = mysqli_num_rows($rNumberOfRows);
 ?>
-
-
-
-
+<!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Slots Game - Sloterino</title>
+    <title>Zahlungsmethode - Sloterino</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
@@ -75,18 +45,9 @@ $resKontostand = mysqli_query($con, $qKontostand);
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-gamepad"></i><span>Games</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i class="fas fa-user"></i><span>Profile</span></a></li>
-                    <?php 
-                        $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
-                        $res = $con->query($sql);
-                        if($res->num_rows > 0){
-                            if($res->fetch_assoc()["Admin"] == 1){
-                                echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
-                                echo('<li class="nav-item"><a class="nav-link" href="adminstatuspage.php"><i class="fas fa-exclamation-circle"></i><span>Status</span></a></li>');
-                            }
-                        }else{
-                            die("Invalid or no userID");
-                        }
-                    ?>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>
@@ -133,115 +94,125 @@ $resKontostand = mysqli_query($con, $qKontostand);
                                     </div>
                                 </div>
                             </li>
-                            <!-- balance and username -->
                             <li class="nav-item dropdown no-arrow mx-1">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: rgb(84,85,96);" id="balance"></a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: rgb(84,85,96);">43$</a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
-                                        <h6 class="dropdown-header">Recent Transactions</h6>
-                                        <div id="recent-transactions">
-                                        </div>
-                                        <a class="dropdown-item text-center small text-gray-500" href="transactions.html">Show all transactions</a>
+                                        <h6 class="dropdown-header">Recent Transactions</h6><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="fw-bold">
+                                                <div class="text-truncate"><span>Game: Lotto</span></div>
+                                                <p class="small text-gray-500 mb-0">-54$ · 2w ago</p>
+                                            </div>
+                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="fw-bold">
+                                                <div class="text-truncate"><span>Game: Roulette</span></div>
+                                                <p class="small text-gray-500 mb-0">+13$ · 2w ago</p>
+                                            </div>
+                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="fw-bold">
+                                                <div class="text-truncate"><span>Deposit</span></div>
+                                                <p class="small text-gray-500 mb-0">+100$ · 3w ago</p>
+                                            </div>
+                                        </a><a class="dropdown-item text-center small text-gray-500" href="#">Show all transactions</a>
                                     </div>
                                 </div>
-                                <div class="shadow dropdown-list dropdown-menu dropdown-menu-end"
-                                    aria-labelledby="alertsDropdown"></div>
+                                <div class="shadow dropdown-list dropdown-menu dropdown-menu-end" aria-labelledby="alertsDropdown"></div>
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small" id="username"></span><img class="border rounded-circle img-profile" style="object-fit: cover;" src="" id="img-profile"></a>
-                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="profile.html"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a>
-                                        <div class="dropdown-divider"></div><a class="dropdown-item" href="logout.html"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">Username</span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
+                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="#"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" href="#"><i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a><a class="dropdown-item" href="#"><i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Activity log</a>
+                                        <div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
                                     </div>
                                 </div>
                             </li>
-                            <!-- end balance and username -->
                         </ul>
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-1">Slots</h3>
-                    
-                     <?php
-					 # zufällige Auswahl der Slot-Ergebnisse
-					 # der Variablenname 'result' wird im Folgenden als Ausgabe eines einzelnen Slots verwendet
-					 $allSlotResults = [];
-					 echo ("</br></br></br>");
-					 for ($i=1; $i<=3; $i++) {
-						 echo ("$i . Slot: </br>");
-						 
-						 # mögliche Slot-Ergebnisse Zufallszahl zwischen 1 und 7
-						 $possibleSlotResults = range(1, 7);
-						 shuffle($possibleSlotResults);
-						 $result = array_shift($possibleSlotResults);
-						 
-						 echo ("</br> $result </br>");
-						 
-						 array_push ($allSlotResults, $result);
-						 ?>
+                    <h3 class="text-dark mb-1">Zahlungsmethode</h3>
+                    <?php
+						#aktuelle Zahlungsmethoden ausgeben
+						echo "<TABLE border=1>
+							 <TR>
+							   <TH>KartenID</TH>
+							   <TH>Kartennummer</TH>
+							   <TH>Ablaufdatum</TH>
+							   <TH>CVV</TH>
+							   <TH>Rechnungsadresse</TH>
+							   <TH>Rechnungsname</TH>
+							   <TH>Hinzufuegedatum</TH>
+							  </TR>";
+							  $arr = ["KartenID","Kartennummer","Ablaufdatum","CVV","Rechnungsadresse", "Rechnungsname", "Hinzufuegedatum"];
+							while($row = mysqli_fetch_assoc($result)) {
+							  echo ("<TR>");
+							  for($i = 0; $i <7; ++$i) {
+								  $temp = $arr[$i];
+								  echo("<TD> $row[$temp] </TD>");  
+							}
 
-						 </br>
-						 </br>
-						 
-					 <?php
-					 }
-					 
-					 # Ergebnisse werden sortiert (aufsteigend)
-					 asort($allSlotResults);
-					 
-					 $result1 = array_shift($allSlotResults);
-					 $result2 = array_shift($allSlotResults);
-					 $result3 = array_shift($allSlotResults);
-					 
-					 # Vergleich der Slots -> Anzahl der gleichen Slots
-					 $anzahlGleicheSlots = 0;
-					 
-					 if ($result1 == $result2) {
-						  if ($result1 == $result3) {
-							  $anzahlGleicheSlots = 3;
-						  }
-						  else {
-							  $anzahlGleicheSlots = 2;
-						  }
-					 }
-					 elseif ($result2 == $result3) {
-						  $anzahlGleicheSlots = 2;
-					 }
-					 
-					 echo ("$anzahlGleicheSlots Ihrer Slots zeigen das gleiche Symbol");
-					 
-					 # abhängig von der Anzahl der gleichen Slots wird ein GewinnFaktor definiert, mit dem der mögliche Gewinn multipliziert wird
-					 if ($anzahlGleicheSlots == 0) {
-						  $gewinnFaktor = 0;
-					 }
-					 elseif ($anzahlGleicheSlots == 2) {
-						  $gewinnFaktor = 0.1;
+						}
+						echo ("</br></TABLE>");
+						?>
 
-					 }
-					 elseif ($anzahlGleicheSlots == 3) {
-						  $gewinnFaktor = 1;
-					 }
-					 
-					 
-					 # Definition Gewinn und neuer Kontostand	 
-					 $gewinn = $moeglicherGewinn * $gewinnFaktor;
-					 
-					 $neuerKontostand = $alterKontostand - $einsatz + $gewinn;
-					 
-					 echo ("</br>Sie gewinnen $gewinn €");
-						 
-					 $qNeuerKontostand = "UPDATE User SET `Kontostand`=$neuerKontostand WHERE UserID=$SESSION_userID";
-					 mysqli_query($con, $qNeuerKontostand);
-					 
-					 
-					 # hinzufuegen der kontostandaenderung in paymentHistory
-					 # paymentHistory abgekuerzt zurch pH
-					 $date = date('Y-m-d H:i:s');
-					 $betrag = $gewinn - $einsatz;
-					 $qPH = "INSERT INTO `paymenthistory`(`Datum`, `Betrag`, `Typ`, `GameID`, `UserID`) VALUES ('$date', '$betrag', 'Slots', '$id', '$SESSION_userID')";
-					 mysqli_query($con, $qPH);
-					 ?>
-                    
+						<BR><BR><BR>
+						<P>Wollen Sie Ihre Zahlungsmethode bearbeiten?</P>
+						<BR>
+
+						<FORM ACTION="pmbearbeitung.php" METHOD=POST>
+							
+							
+							Was möchten Sie damit machen?
+							<BR>
+							<fieldset>
+							<!--definition value
+							0 -> loeschen
+							1 -> bearbeiten
+							2 -> hinzufuegen
+							-->
+							  <INPUT TYPE=radio ID="loeschen" NAME="loeschen" VALUE=0>
+							  <LABEL for="loeschen">löschen</LABEL>
+							  <BR>
+							  <INPUT TYPE=radio ID="bearbeiten" NAME="loeschen" VALUE=1>
+							  <LABEL for="bearbeiten">bearbeiten</LABEL>
+							  <BR>
+							  <INPUT TYPE=radio ID="hinzufuegen" NAME="loeschen" VALUE=2>
+							  <LABEL for="hinzufuegen">hinzufügen</LABEL>
+							  <BR><BR>
+							</fieldset>
+							
+							KartenID der zu bearbeitenden Zahlungsmethode:
+							<BR>
+							<SELECT name="kartenid">
+								<?php
+							    $arrNumberOfRows = ["KartenID"];
+							    
+							    $temp = "KartenID";
+							    while ($row = mysqli_fetch_assoc($rNumberOfRows)){
+									echo ("<option VALUE=$row[$temp]>$row[$temp]</option>");
+								}
+							    ?>
+							</SELECT>
+							<BR><BR><BR>
+							
+						  Falls Sie Ihre Zahlungsmethode bearbeiten/hinzufügen wollen, geben Sie hier geänderte(n)/neue(n) Information(en) der ausgewählten Zahlungsmethode ein:
+						  <BR><BR>
+						  Kartennummer:<BR> <INPUT TYPE=number NAME="kartennummer" SIZE=10 MAXLENGTH=45>
+						  <BR>
+						  Ablaufdatum:<BR> <INPUT TYPE=date NAME="ablaufdatum" SIZE=10 MAXLENGTH=45>
+						  <BR>
+						  CVV: <BR><INPUT TYPE=number NAME="cvv" SIZE=10 MAXLENGTH=45>
+						  <BR>
+						  Rechnungsadresse:<BR> <INPUT TYPE=text NAME="rechnungsadresse" SIZE=10 MAXLENGTH=45>
+						  <BR>
+						  Nachname:<BR> <INPUT TYPE=text NAME="rechnungsname" SIZE=10 MAXLENGTH=45>
+						  <BR>
+						  <BR>
+						  <BR>
+						<INPUT TYPE=submit NAME="Submit" VALUE="Ändern">
+						</FORM>
+
                 </div>
+
             </div>
             <footer class="bg-white sticky-footer">
                 <div class="container my-auto">
@@ -251,8 +222,6 @@ $resKontostand = mysqli_query($con, $qKontostand);
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="assets/js/site.js"></script>
     <script src="assets/js/games.js"></script>
     <script src="assets/js/theme.js"></script>
 </body>
