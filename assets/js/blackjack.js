@@ -21,7 +21,7 @@ $("#stand").click(function() {
 // event handlers
 
 function StartGame(){
-	if ($("#bet").val() <= 0){  // überprüft die Eingabe auf gültigkeit
+	if (isNaN($("#bet").val())|| $("#bet").val() <= 0){  // überprüft die Eingabe auf gültigkeit
 		$("#invalid-bet").show()
 		setTimeout(function () {
 			$('#invalid-bet').fadeOut('slow');
