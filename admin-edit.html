@@ -178,11 +178,15 @@ if(!isset($_GET["id"])){
                                     </div>
                                     <div class="row">
                                         <button type="button" class="btn btn-warning" id="account-lock"
-                                            style="margin-top: 10px; margin-bottom: 15px;">Lock this
+                                            style="margin-top: 10px; margin-bottom: 10px;">Lock this
                                             account</button>
                                         <button type="button" class="btn btn-warning" id="account-unlock"
-                                            style="margin-top: 10px; margin-bottom: 15px;display: none;">Unlock this
+                                            style="margin-top: 10px; margin-bottom: 10px;display: none;">Unlock this
                                             account</button>
+                                    </div>
+                                    <div class="row">
+                                        <button type="button" class="btn btn-danger" id="account-promote"
+                                            style="margin-top: 10px; margin-bottom: 10px;">Promote account to admin</button>
                                     </div>
                                 </div>
                             </div>
@@ -231,7 +235,7 @@ if(!isset($_GET["id"])){
                                                 <div class="col">
                                                     <div class="mb-3"><label class="form-label"
                                                             for="username"><strong>Username</strong></label><input
-                                                            class="form-control" type="text" id="username"
+                                                            class="form-control" type="text" id="Username"
                                                             placeholder="user.name" name="username"></div>
                                                 </div>
                                                 <div class="col">
@@ -311,7 +315,7 @@ if(!isset($_GET["id"])){
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/get.js"></script>
     <script src="assets/js/adminEdit.js"></script>
-    <script src="assets/js/site"></script>
+    <script src="assets/js/site.js"></script>
 </body>
 
 </html>

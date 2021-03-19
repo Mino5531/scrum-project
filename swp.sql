@@ -362,11 +362,11 @@ INSERT INTO `Country` (`id`, `iso`, `name`, `nicename`, `iso3`) VALUES
 
 -- Dumping structure for table swp.Game
 CREATE TABLE IF NOT EXISTS `Game` (
-  `GameID` int(11) NOT NULL,
+  `GameID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(45) COLLATE utf8_bin NOT NULL,
   `URL` varchar(65) COLLATE utf8_bin NOT NULL,
-  `Mindesteinsatz` float NOT NULL,
-  `Gewinn` float NOT NULL,
+  `Mindesteinsatz` float DEFAULT NULL,
+  `Gewinn` float DEFAULT NULL,
   PRIMARY KEY(`GameID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
