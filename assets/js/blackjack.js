@@ -81,17 +81,15 @@ function Blackjack(){
 			controller: "blackjack",
 			cards: cards
 		},
-		success: function(data){
+		success: function(response){
 			try {
-				var data = JSON.parse(data);
+				var data = JSON.parse(response);
 			} catch (error) {
 				JsonParseError(error, data)
 				return
 			}
-			var msg = data.msg
-			var balance = data.balance;
 
-			$("#result-msg").text(msg)
+			DisplayOutcome(true, data.msg)
 		}
 	})
 }
@@ -177,7 +175,6 @@ function EndGame(){
 				return
 			}
 			// code:
-			var balance = data.balance;
 
 			DisplayOutcome(data.win, data.msg)
 
