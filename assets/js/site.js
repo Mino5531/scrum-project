@@ -154,7 +154,8 @@ function CheckLogin(){
 
 function DisplayImage(image){
 	if (image == null){
-		return
+		$("#img-profile").attr("src", "assets/img/dogs/image2.jpeg")
+		$("#img").attr("src", "assets/img/dogs/image2.jpeg")
 	}
 	else{
 		$("#img-profile").attr("src", "data:image/jpeg;base64," + image)
