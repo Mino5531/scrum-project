@@ -12,7 +12,7 @@ or die ("Fehler: " . mysqli_connect_error());
 
 #### USERID MUSS NOCH ZU SESSIONID GEÄNDERT WERDEN
 # Zeile 13 statt 14 verwenden
-$SESSION_userID = $_SESSION['UserID'];
+$SESSION_userID = $_SESSION['user-id'];
 # $SESSION_userID = 1;
 $id = 3;
 # Definition des größt möglichen Gewinns
@@ -75,9 +75,18 @@ $resKontostand = mysqli_query($con, $qKontostand);
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa fa-gamepad"></i><span>Games</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i class="fas fa-user"></i><span>Profile</span></a></li>
-                    <li class="nav-item"></li>
-                    <li class="nav-item"></li>
-                    <li class="nav-item"></li>
+                    <?php 
+                        $sql = "SELECT Admin FROM User WHERE UserID = ". $_SESSION['user-id'];
+                        $res = $con->query($sql);
+                        if($res->num_rows > 0){
+                            if($res->fetch_assoc()["Admin"] == 1){
+                                echo('<li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-users-cog"></i><span>Admin</span></a></li>');
+                                echo('<li class="nav-item"><a class="nav-link" href="adminstatuspage.php"><i class="fas fa-exclamation-circle"></i><span>Status</span></a></li>');
+                            }
+                        }else{
+                            die("Invalid or no userID");
+                        }
+                    ?>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>
