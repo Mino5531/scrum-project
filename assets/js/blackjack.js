@@ -28,7 +28,7 @@ function StartGame(){
 		}, 2000);
 		return
 	}
-	if ($("#bet").val() > balance ){
+	if (parseFloat($("#bet").val()) > parseFloat(balance) ){
 		$("#insufficient-funds").show()
 		setTimeout(function () {
 			$('#insufficient-funds').fadeOut('slow');
