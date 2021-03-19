@@ -21,7 +21,7 @@ $("#stand").click(function() {
 // event handlers
 
 function StartGame(){
-	if ($("#bet").val() <= 0){
+	if ($("#bet").val() <= 0){  // überprüft die Eingabe auf gültigkeit
 		$("#invalid-bet").show()
 		setTimeout(function () {
 			$('#invalid-bet').fadeOut('slow');
@@ -37,17 +37,14 @@ function StartGame(){
 	}
 	$("#bet").prop("disabled", true)
 
-	request = $.ajax({
+	$.ajax({ // sendet einen POST request an blackjack.php
 		type: "post",
 		url: urlBlackjack,
 		data: {
 			controller: "start",
 			bet: $("#bet").val()
-		}
-	})
-
-	request.done(function (data, status){
-		if (status == "success"){
+		},
+		success: function(data){
 			try {
 				cards = JSON.parse(data)
 			} catch (error) {
@@ -66,32 +63,25 @@ function StartGame(){
 
 			$("#hit").text("Hit")
 			$("#stand").show()
+
 			if(PlayerValue == 21){
 				Blackjack()
 				return
 			}
 			CheckValue()
 		}
-		else{
-			AjaxError(status)
-			return
-		}
 	})
 }
 
 function Blackjack(){
-	request = $.ajax({
+	$.ajax({
 		type: "post",
 		url: urlBlackjack,
 		data: {
 			controller: "blackjack",
 			cards: cards
-		}
-	})
-
-	request.done(function(data, status){
-		if (status == "success"){
-			// code
+		},
+		success: function(data){
 			try {
 				var data = JSON.parse(data);
 			} catch (error) {
@@ -103,24 +93,19 @@ function Blackjack(){
 
 			$("#result-msg").text(msg)
 		}
-		else{
-			AjaxError(status)
-		}
 	})
 }
 
 function Hit() {
-	PushCard();
-	request = $.ajax({
+	PushCard()
+
+	$.ajax({
 		type: "post",
 		url: urlBlackjack,
 		data: {
 			controller: "player-hit",
-		}
-	})
-
-	request.done(function(data, status){
-		if (status == "success"){
+		},
+		success: function (data){
 			try {
 				var card = JSON.parse(data)
 			} catch (error) {
@@ -132,10 +117,6 @@ function Hit() {
 			cards.player.push(card)
 			DisplayValues()
 			CheckValue()
-		}
-		else{
-			AjaxError(status)
-			return
 		}
 	})
 }
@@ -152,16 +133,13 @@ function Bank(){
 }
 
 function BankHit(){
-	request = $.ajax({
+	$.ajax({
 		type: "post",
 		url: urlBlackjack,
 		data: {
 			controller: "bank-hit"
-		}
-	})
-
-	request.done(function(data, status){
-		if (status == "success"){
+		},
+		success: function(data){
 			try {
 				var card = JSON.parse(data)
 			} catch (error) {
@@ -179,10 +157,6 @@ function BankHit(){
 				EndGame()
 			}
 		}
-		else{
-			AjaxError(status)
-			return
-		}
 	})
 }
 
@@ -194,11 +168,8 @@ function EndGame(){
 			controller: "end",
 			cards: cards,
 			bet: $("#bet").val()
-		}
-	})
-
-	request.done(function(data, status){
-		if (status == "success"){
+		},
+		success: function(data){
 			try {
 				var data = JSON.parse(data)
 			} catch (error) {
@@ -206,35 +177,15 @@ function EndGame(){
 				return
 			}
 			// code:
-			var msg = data.msg;
 			var balance = data.balance;
-			var win = data.win;
 
-			if (win){
-				$("#win").show()
-				$("#win-text").text(msg)
-				setTimeout(function () {
-					$('#win').fadeOut('slow');
-				}, 1000);
-			}
-			else{
-				$("#loss").show()
-				$("#loss-text").text(msg)
-				setTimeout(function () {
-					$('#loss').fadeOut('slow');
-				}, 1000);
-			}
+			DisplayOutcome(data.win, data.msg)
 
 			EnableButtons()
 			$("#hit").hide()
 			$("#stand").hide()
-
 			$("#restart").show()
 			LoadBalance()
-		}
-		else{
-			AjaxError(status)
-			return
 		}
 	})
 }
@@ -320,5 +271,22 @@ function PushCard(){
 		DisplayValues()
 		ShowCard(cache, "#bank-cards")
 		cache = null;
+	}
+}
+
+function DisplayOutcome(win, msg){ // win: bool, msg: string
+	if (win){
+		$("#win").show()
+		$("#win-text").text(msg)
+		setTimeout(function () {
+			$('#win').fadeOut('slow');
+		}, 1000);
+	}
+	else{
+		$("#loss").show()
+		$("#loss-text").text(msg)
+		setTimeout(function () {
+			$('#loss').fadeOut('slow');
+		}, 1000);
 	}
 }
