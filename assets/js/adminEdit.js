@@ -1,7 +1,7 @@
 /**
  * User Settings
  */
-var username = document.getElementById('username');
+var username = document.getElementById('Username');
 var email = document.getElementById('email');
 var first_name = document.getElementById('first_name');
 var last_name = document.getElementById('last_name');
@@ -21,6 +21,7 @@ var contact_save = document.getElementById('contact_save');
 var delete_account = document.getElementById('account-delete');
 var lock_account = document.getElementById('account-lock');
 var unlock_account = document.getElementById('account-unlock');
+var promote_account = document.getElementById('account-promote');
 
 var userID = GET['id'];
 
@@ -131,4 +132,17 @@ unlock_account.onclick = function () {
         console.log(`${data} and status is ${status}`);
         location.reload();
     });
+}
+
+promote_account.onclick = function() {
+    const data = {
+        promote:1,
+        id:userID
+    }
+    if(confirm("Are you sure you want to promote this user to an administrator? You will not be able to revert this change")){
+        $.post('assets/php/setUserSettingsA.php', data, function (data,status){
+            console.log(`${data} and status is ${status}`);
+            location.href = 'table.html';
+        })
+}
 }

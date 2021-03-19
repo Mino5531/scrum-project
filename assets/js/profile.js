@@ -1,7 +1,7 @@
 /**
  * User Settings
  */
-var username = document.getElementById('username');
+var username = document.getElementById('Username');
 var email = document.getElementById('email');
 var first_name = document.getElementById('first_name');
 var last_name = document.getElementById('last_name');
