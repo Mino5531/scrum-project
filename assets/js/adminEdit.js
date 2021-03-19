@@ -62,6 +62,28 @@ function loadData() {
         alert("JSON Error: could not load user data");
     }).always(function () {
         console.log("complete");
+    });
+    $.ajax({
+        type: "get",
+        url: 'assets/php/getUsers',
+        data: {
+            img: "1"
+        },
+        success: function (json) {
+            try {
+                var data = JSON.parse(json)
+            } catch (error) {
+                JsonParseError(error, json)
+                return
+            }
+            //DisplayImage(data.img);
+            if (image == null) {
+                $("#imga").attr("src", "assets/img/dogs/image2.jpeg")
+            }
+            else {
+                $("#imga").attr("src", "data:image/jpeg;base64," + data.img)
+            }
+        }
     })
 }
 
@@ -134,15 +156,15 @@ unlock_account.onclick = function () {
     });
 }
 
-promote_account.onclick = function() {
+promote_account.onclick = function () {
     const data = {
-        promote:1,
-        id:userID
+        promote: 1,
+        id: userID
     }
-    if(confirm("Are you sure you want to promote this user to an administrator? You will not be able to revert this change")){
-        $.post('assets/php/setUserSettingsA.php', data, function (data,status){
+    if (confirm("Are you sure you want to promote this user to an administrator? You will not be able to revert this change")) {
+        $.post('assets/php/setUserSettingsA.php', data, function (data, status) {
             console.log(`${data} and status is ${status}`);
             location.href = 'table.html';
         })
-}
+    }
 }
