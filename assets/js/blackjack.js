@@ -21,7 +21,7 @@ $("#stand").click(function() {
 // event handlers
 
 function StartGame(){
-	if ($("#bet").val() <= 0){  // überprüft die Eingabe auf gültigkeit
+	if (isNaN($("#bet").val())|| $("#bet").val() <= 0){  // überprüft die Eingabe auf gültigkeit
 		$("#invalid-bet").show()
 		setTimeout(function () {
 			$('#invalid-bet').fadeOut('slow');
@@ -81,17 +81,15 @@ function Blackjack(){
 			controller: "blackjack",
 			cards: cards
 		},
-		success: function(data){
+		success: function(response){
 			try {
-				var data = JSON.parse(data);
+				var data = JSON.parse(response);
 			} catch (error) {
 				JsonParseError(error, data)
 				return
 			}
-			var msg = data.msg
-			var balance = data.balance;
 
-			$("#result-msg").text(msg)
+			DisplayOutcome(true, data.msg)
 		}
 	})
 }
@@ -177,7 +175,6 @@ function EndGame(){
 				return
 			}
 			// code:
-			var balance = data.balance;
 
 			DisplayOutcome(data.win, data.msg)
 

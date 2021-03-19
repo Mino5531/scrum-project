@@ -153,7 +153,7 @@ function Blackjack(){
 
 	$amount = $bet * 1.5;
 
-	$msg = "Blackjack! $amount$ will be transfered to your account";
+	$msg = "!!<b>Blackjack</b>!! $amount$ will be transfered to your account";
 	AddBalance($amount);
 	$win = true;
 
