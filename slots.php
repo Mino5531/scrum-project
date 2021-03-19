@@ -238,7 +238,7 @@ $resKontostand = mysqli_query($con, $qKontostand);
 					 # hinzufuegen der kontostandaenderung in paymentHistory
 					 # paymentHistory abgekuerzt zurch pH
 					 $date = date('Y-m-d H:i:s');
-					 $betrag = $alterKontostand - $neuerKontostand;
+					 $betrag = $gewinn - $einsatz;
 					 $qPH = "INSERT INTO `paymenthistory`(`Datum`, `Betrag`, `Typ`, `GameID`, `UserID`) VALUES ('$date', '$betrag', 'Slots', '$id', '$SESSION_userID')";
 					 mysqli_query($con, $qPH);
 					 ?>
